@@ -38,6 +38,7 @@ import Palette from '../../styles/Colors.style';
 export default function Signup() {
   // local hooks =============:
   const NavigationTo = useNavigation();
+  const [createFullName, setCreateFullName] = React.useState('');
   const [createEmail, setCreateEmail] = React.useState('');
   const [createPassword, setCreatePassword] = React.useState('');
   const [confirmPassword, setConfirmPassword] = React.useState('');
@@ -46,51 +47,114 @@ export default function Signup() {
 
   // local handlers =============:
   // creact account handler:
-  const userCreactAccount = async () => {};
+  const userCreactAccount = async (fullName, email, password) => {
+    await firebase
+      .auth()
+      .createUserWithEmailAndPassword(email, password)
+      .then(() => {
+        firebase
+          .auth()
+          .currentUser.sendEmailVerification({
+            handleCodeInApp: true,
+            url: 'https://our-car-app-edf68.firebaseapp.com/',
+          })
+          .then(() => {
+            alert(
+              'Verification sent to your email.\nPlease check spam or junk folder.'
+            );
+          })
+          .catch((error) => {
+            alert(error.message);
+          })
+          .then(() => {
+            firebase
+              .firestore()
+              .collection('users')
+              .doc(firebase.auth().currentUser.uid)
+              .set({
+                fullName,
+                email,
+              });
+          })
+          .catch((error) => {
+            alert(error.message);
+          });
+      })
+      .catch((error) => {
+        alert(error.message);
+      });
+  };
 
   // validations:
+
+  const changeCreateFullNameColor = () => {
+    if (
+      createFullName.toString() !== '' &&
+      createFullName.toString().length >= 0
+    ) {
+      return Palette.Primary;
+    } else return Palette.Error;
+  };
+  const changeCreateFullNameIcon = () => {
+    if (
+      createFullName.toString() !== '' &&
+      createFullName.toString().length >= 0
+    ) {
+      return 'account-outline';
+    } else return 'account-alert-outline';
+  };
+
   const changeCreateEmailColor = () => {
     if (
-      (EmailValidator.validate(createEmail) && createEmail !== '') ||
-      createEmail >= 0
+      EmailValidator.validate(createEmail) &&
+      createEmail.toString() !== '' &&
+      createEmail.toString().length >= 0
     ) {
       return Palette.Primary;
     } else return Palette.Error;
   };
   const changeCreateEmailIcon = () => {
     if (
-      (EmailValidator.validate(createEmail) && createEmail !== '') ||
-      createEmail >= 0
+      EmailValidator.validate(createEmail) &&
+      createEmail.toString() !== '' &&
+      createEmail.toString().length >= 0
     ) {
       return 'email-outline';
     } else return 'email-alert-outline';
   };
   const changeCreatePasswordColor = () => {
-    if (createPassword.length >= 6 || createPassword >= 0) {
+    if (createPassword.length >= 6 && createPassword.toString().length >= 0) {
       return Palette.Primary;
     } else return Palette.Error;
   };
   const changeCreatePasswordIcon = () => {
-    if (createPassword.length >= 6 || createPassword >= 0) {
+    if (createPassword.length >= 6 && createPassword.toString().length >= 0) {
       return 'lock-outline';
     } else return 'lock-alert-outline';
   };
   const changeConfirmedPasswordColor = () => {
-    if (confirmPassword === createPassword || confirmPassword >= 0) {
+    if (
+      confirmPassword === createPassword &&
+      confirmPassword.toString().length >= 0
+    ) {
       return Palette.Primary;
     } else return Palette.Error;
   };
   const changeConfirmedPasswordIcon = () => {
-    if (confirmPassword === createPassword || confirmPassword >= 0) {
+    if (
+      confirmPassword === createPassword &&
+      confirmPassword.toString().length >= 0
+    ) {
       return 'lock-check-outline';
     } else return 'lock-alert-outline';
   };
   const formValidateForCreateAccBtnDisable = () => {
     if (
-      createEmail !== '' &&
-      confirmPassword !== '' &&
-      createPassword !== '' &&
-      createPassword.length >= 6
+      createFullName.toString() !== '' &&
+      createEmail.toString() !== '' &&
+      confirmPassword.toString() !== '' &&
+      createPassword.toString() !== '' &&
+      createPassword.toString().length >= 6
     ) {
       return false;
     } else return true;
@@ -104,7 +168,29 @@ export default function Signup() {
         <ScreenTitle title="Login" />
         <Stack spacing={5}>
           <Box>
-            {/* 1 CREATE EMAIL INPUT ============================= */}
+            {/* 1 CREATE FULL NAME INPUT ============================= */}
+            <TextInput
+              leading={(props) => (
+                <Icon
+                  name={changeCreateFullNameIcon()}
+                  {...props}
+                  size={20}
+                  color={changeCreateFullNameColor()}
+                />
+              )}
+              value={createFullName}
+              onChangeText={(text) => setCreateFullName(text)}
+              color={changeCreateFullNameColor()}
+              label="Full Name"
+              autoCapitalize="none"
+              placeholder="e.g: john doe"
+              autoCorrect={false}
+              textContentType="name"
+              variant="outlined"
+            />
+          </Box>
+          <Box>
+            {/* 2 CREATE EMAIL INPUT ============================= */}
             <TextInput
               leading={(props) => (
                 <Icon
@@ -118,12 +204,16 @@ export default function Signup() {
               onChangeText={(text) => setCreateEmail(text)}
               color={changeCreateEmailColor()}
               label="New E-mail"
+              autoCapitalize="none"
+              placeholder="e.g: johndoe@example.com"
+              autoCorrect={false}
               textContentType="emailAddress"
+              keyboardType="email-address"
               variant="outlined"
             />
           </Box>
           <Box>
-            {/* 2 CREATE PASSWORD INPUT ========================== */}
+            {/* 3 CREATE PASSWORD INPUT ========================== */}
             <TextInput
               leading={(props) => (
                 <Icon
@@ -137,6 +227,8 @@ export default function Signup() {
               onChangeText={(text) => setCreatePassword(text)}
               color={changeCreatePasswordColor()}
               label="New Password"
+              autoCapitalize="none"
+              autoCorrect={false}
               secureTextEntry={!showPassword}
               textContentType="password"
               variant="outlined"
@@ -161,7 +253,7 @@ export default function Signup() {
             />
           </Box>
           <Box>
-            {/* 3 CONFIRM PASSWORD INPUT ========================== */}
+            {/* 4 CONFIRM PASSWORD INPUT ========================== */}
             <TextInput
               leading={(props) => (
                 <Icon
@@ -175,6 +267,8 @@ export default function Signup() {
               onChangeText={(text) => setConfirmPassword(text)}
               color={changeConfirmedPasswordColor()}
               label="Confirm Password"
+              autoCapitalize="none"
+              autoCorrect={false}
               secureTextEntry={!showConfirmPassword}
               textContentType="password"
               variant="outlined"
@@ -199,10 +293,12 @@ export default function Signup() {
             />
           </Box>
           <Box pt={10} pb={10}>
-            {/* 4 CREATE ACCOUNT BUTTON ================================ */}
+            {/* 5 CREATE ACCOUNT BUTTON ================================ */}
             <Button
               leading={(props) => <Icon name="account-plus" {...props} />}
-              onPress={userCreactAccount}
+              onPress={() => {
+                userCreactAccount(createFullName, createEmail, createPassword);
+              }}
               variant="contained"
               title="Create Account"
               disabled={formValidateForCreateAccBtnDisable()}

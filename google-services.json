@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "193169070839",
+    "project_id": "our-car-app-edf68",
+    "storage_bucket": "our-car-app-edf68.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:193169070839:android:a2155eb17a6c28776351f2",
+        "android_client_info": {
+          "package_name": "com.ourcarapp.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "193169070839-jb9b68kf2h5flki8fg6bm1aqdlfgksik.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAuo5GL9oxLbRmArlA8Yx4iEfXu6o2sHcA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "193169070839-jb9b68kf2h5flki8fg6bm1aqdlfgksik.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

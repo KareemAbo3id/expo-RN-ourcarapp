@@ -1,8 +1,12 @@
+/* eslint-disable operator-linebreak */
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Avatar, Box } from '@react-native-material/core';
 // imports ////////////////////////////////
-const ourCarLogo = '../assets/our-car-logo.png';
+
+const appLogoSrc = 'https://raw.githubusercontent.com/KareemAbo3id/';
+const appLogoRepo = 'expo-RN-ourcarapp/master/';
+const appLogoBase = 'src/assets/our-car-logo.png';
 
 // react function /////////////////////////
 export default function LogoAvatar() {
@@ -14,7 +18,7 @@ export default function LogoAvatar() {
       <Avatar
         size={120}
         image={{
-          uri: `${ourCarLogo}`,
+          uri: `${appLogoSrc + appLogoRepo + appLogoBase}`,
         }}
       />
     </Box>

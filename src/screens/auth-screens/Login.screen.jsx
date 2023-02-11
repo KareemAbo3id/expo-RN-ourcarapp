@@ -53,24 +53,42 @@ export default function Login() {
   };
 
   // validations:
+
   const changeLogEmailColor = () => {
     if (
-      (EmailValidator.validate(logEmail) && logEmail !== '') ||
-      logEmail >= 0
+      EmailValidator.validate(logEmail) &&
+      logEmail.toString() !== '' &&
+      logEmail.toString().length >= 0
     ) {
       return Palette.Primary;
     } else return Palette.Error;
   };
   const changeLogEmailIcon = () => {
     if (
-      (EmailValidator.validate(logEmail) && logEmail !== '') ||
-      logEmail >= 0
+      EmailValidator.validate(logEmail) &&
+      logEmail.toString() !== '' &&
+      logEmail.toString().length >= 0
     ) {
       return 'email-outline';
     } else return 'email-alert-outline';
   };
+  const changeLogPasswordColor = () => {
+    if (logPassword.toString() !== '' && logPassword.toString().length >= 6) {
+      return Palette.Primary;
+    } else return Palette.Error;
+  };
+  const changeLogPasswordIcon = () => {
+    if (logPassword.toString() !== '' && logPassword.toString().length >= 6) {
+      return 'lock-outline';
+    } else return 'lock-alert-outline';
+  };
   const formValidateForLogBtnDisable = () => {
-    if (logEmail !== '' && logPassword !== '' && logPassword.length >= 6) {
+    if (
+      EmailValidator.validate(logEmail) &&
+      logEmail.toString() !== '' &&
+      logPassword.toString() !== '' &&
+      logPassword.toString().length >= 6
+    ) {
       return false;
     } else return true;
   };
@@ -78,7 +96,7 @@ export default function Login() {
   // local ui =============:
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid}>
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView style={{ padding: 20 }}>
         <LogoAvatar />
         <ScreenTitle title="Login" />
         <Stack spacing={5}>
@@ -97,8 +115,11 @@ export default function Login() {
               onChangeText={(text) => setLogEmail(text)}
               color={changeLogEmailColor()}
               label="E-mail"
-              placeholder="Type your E-mail"
+              autoCapitalize="none"
+              placeholder="e.g: johndoe@example.com"
+              autoCorrect={false}
               textContentType="emailAddress"
+              keyboardType="email-address"
               variant="outlined"
             />
           </Box>
@@ -107,17 +128,18 @@ export default function Login() {
             <TextInput
               leading={(props) => (
                 <Icon
-                  name="lock-outline"
+                  name={changeLogPasswordIcon()}
                   {...props}
                   size={20}
-                  color={Palette.Primary}
+                  color={changeLogPasswordColor()}
                 />
               )}
               value={logPassword}
               onChangeText={(password) => setLogPassword(password)}
-              color={Palette.Primary}
+              color={changeLogPasswordColor()}
               label="Password"
-              placeholder="Type your password"
+              autoCapitalize="none"
+              autoCorrect={false}
               secureTextEntry={!showPassword}
               textContentType="password"
               variant="outlined"
@@ -179,6 +201,7 @@ export default function Login() {
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
+    backgroundColor: Palette.Primary,
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
   },
 });
