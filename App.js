@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { View, StyleSheet } from 'react-native';
-import { useFonts } from 'expo-font';
-import * as SplashScreen from 'expo-splash-screen';
 import { firebase } from './config/firebase';
 // screens:
 import Login from './src/screens/auth-screens/Login.screen';
@@ -11,7 +8,6 @@ import Signup from './src/screens/auth-screens/Signup.screen';
 import Home from './src/screens/home-screen/Home.screen';
 // imports ////////////////////////////////
 
-SplashScreen.preventAutoHideAsync();
 const Stack = createNativeStackNavigator();
 
 // react function /////////////////////////
@@ -70,31 +66,9 @@ function App() {
 }
 
 export default function AppNavigation() {
-  const [fontsLoaded] = useFonts({
-    cairo: require('./src/assets/fonts/Cairo-Regular.ttf'),
-  });
-
-  const onLayoutRootView = React.useCallback(async () => {
-    if (fontsLoaded) {
-      await SplashScreen.hideAsync();
-    }
-  }, [fontsLoaded]);
-
-  if (!fontsLoaded) {
-    return null;
-  }
-
   return (
     <NavigationContainer>
-      <View style={Styles.container} onLayout={onLayoutRootView}>
-        <App />
-      </View>
+      <App />
     </NavigationContainer>
   );
 }
-
-const Styles = StyleSheet.create({
-  container: {
-    fontFamily: 'cairo',
-  },
-});
