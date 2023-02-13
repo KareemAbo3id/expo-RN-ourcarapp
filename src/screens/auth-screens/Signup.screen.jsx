@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-color-literals */
 /* eslint-disable no-alert */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-else-return */
@@ -60,7 +61,7 @@ export default function Signup() {
           })
           .then(() => {
             alert(
-              'Verification sent to your email.\nPlease check spam or junk folder.'
+              'تم إرسال رابط التحقق في الايميل الخاص بك\nالرجاء التحقق من صندوق junk او spam'
             );
           })
           .catch((error) => {
@@ -163,7 +164,7 @@ export default function Signup() {
   // local ui  =============:
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid}>
-      <KeyboardAvoidingView>
+      <KeyboardAvoidingView style={Styles.screenContainer}>
         <LogoAvatar />
         <ScreenTitle title="Login" />
         <Stack spacing={5}>
@@ -328,6 +329,12 @@ export default function Signup() {
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
+    backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenContainer: {
+    paddingHorizontal: 30,
   },
 });

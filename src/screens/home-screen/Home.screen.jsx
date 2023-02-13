@@ -1,15 +1,28 @@
+/* eslint-disable react/jsx-one-expression-per-line */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable no-shadow */
 /* eslint-disable react/no-unstable-nested-components */
 /* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable import/no-extraneous-dependencies */
-import { Button } from '@react-native-material/core';
 import React from 'react';
 import {
   StyleSheet,
-  Text,
   SafeAreaView,
   Platform,
   StatusBar,
+  View,
 } from 'react-native';
+import {
+  Button,
+  Text,
+  Backdrop,
+  BackdropSubheader,
+  AppBar,
+  Flex,
+  TextInput,
+  IconButton,
+} from '@react-native-material/core';
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { firebase } from '../../../config/firebase';
 import Palette from '../../styles/Colors.style';
@@ -19,6 +32,7 @@ import Palette from '../../styles/Colors.style';
 export default function Home() {
   // local hooks:
   const [userData, setUserData] = React.useState('');
+  const [appBarrevealed, setAppBarRevealed] = React.useState(false);
 
   // local handlers:
   React.useEffect(() => {
@@ -39,17 +53,94 @@ export default function Home() {
   // local ui:
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid}>
-      <Text>👋 Hello, {userData.fullName}</Text>
-      <Text>👉 logged in as: {userData.email}</Text>
-
-      <Button
-        leading={(props) => <Icon name="login" {...props} />}
-        onPress={() => {
-          firebase.auth().signOut();
-        }}
-        variant="contained"
-        title="logout"
-        color={Palette.Primary}
+      <Backdrop
+        headerContainerStyle={{ backgroundColor: Palette.Primary }}
+        style={{ backgroundColor: Palette.Primary }}
+        revealed={appBarrevealed}
+        header={
+          <AppBar
+            transparent
+            leading={(props) => (
+              <IconButton
+                icon={(props) => (
+                  <Icon
+                    name={appBarrevealed ? 'close' : 'magnify'}
+                    {...props}
+                  />
+                )}
+                onPress={() => setAppBarRevealed((prevState) => !prevState)}
+                {...props}
+              />
+            )}
+            trailing={(props) => (
+              <IconButton
+                icon={(props) => (
+                  <Icon
+                    name={
+                      appBarrevealed
+                        ? 'square-edit-outline'
+                        : 'square-edit-outline'
+                    }
+                    {...props}
+                  />
+                )}
+                {...props}
+              />
+            )}
+          />
+        }
+        backLayer={
+          <View style={Styles.backLayerStyles}>
+            <TextInput
+              leading={(props) => (
+                <Icon
+                  {...props}
+                  name="magnify"
+                  size={20}
+                  color={Palette.Light}
+                />
+              )}
+              placeholder="Search for car centers..."
+              color={Palette.Light}
+              variant="standard"
+            />
+          </View>
+        }
+      >
+        <BackdropSubheader title={`👋 Welcome, ${userData.fullName}`} />
+        <Flex justify="center" items="start" direction="column" ph={30} pv={20}>
+          <Text>Your e-mail: {userData.email}</Text>
+          <Text />
+          <Button
+            leading={(props) => <Icon name="login" {...props} />}
+            onPress={() => {
+              firebase.auth().signOut();
+            }}
+            variant="contained"
+            title="logout"
+            color={Palette.Primary}
+          />
+        </Flex>
+      </Backdrop>
+      <AppBar
+        color={Palette.Light}
+        variant="bottom"
+        trailing={(props) => (
+          <IconButton
+            icon={(props) => (
+              <Icon name={appBarrevealed ? 'account' : 'account'} {...props} />
+            )}
+            {...props}
+          />
+        )}
+        leading={(props) => (
+          <IconButton
+            icon={(props) => (
+              <Icon name={appBarrevealed ? 'home' : 'home'} {...props} />
+            )}
+            {...props}
+          />
+        )}
       />
     </SafeAreaView>
   );
@@ -59,8 +150,11 @@ export default function Home() {
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+  },
+  backLayerStyles: {
+    backgroundColor: Palette.Primary,
+    height: 70,
+    paddingHorizontal: 12,
   },
 });

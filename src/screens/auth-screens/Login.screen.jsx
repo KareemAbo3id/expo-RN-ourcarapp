@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-color-literals */
 /* eslint-disable no-alert */
 /* eslint-disable react/jsx-no-bind */
 /* eslint-disable no-else-return */
@@ -46,7 +47,12 @@ export default function Login() {
   // login handler:
   const userLogin = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .then(() => {
+          alert('أهلاً\nتم تسجيل الدخول بنجاح');
+        });
     } catch (error) {
       alert(error.message);
     }
@@ -96,7 +102,7 @@ export default function Login() {
   // local ui =============:
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid}>
-      <KeyboardAvoidingView style={{ padding: 20 }}>
+      <KeyboardAvoidingView style={Styles.screenContainer}>
         <LogoAvatar />
         <ScreenTitle title="Login" />
         <Stack spacing={5}>
@@ -201,7 +207,12 @@ export default function Login() {
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
-    backgroundColor: Palette.Primary,
+    backgroundColor: '#fff',
     paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  screenContainer: {
+    paddingHorizontal: 30,
   },
 });
