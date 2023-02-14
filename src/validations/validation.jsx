@@ -44,34 +44,6 @@ const validatePasswordIcon = (password = '') => {
   } else return 'lock-alert-outline';
 };
 
-const validateSignInFormSubmit = (email = '', password = '') => {
-  if (
-    EmailValidator.validate(email) &&
-    email.toString() !== '' &&
-    password.toString() !== '' &&
-    password.toString().length > 5
-  ) {
-    return false;
-  } else return true;
-};
-
-const validateCreateAccFormSubmit = (
-  name = '',
-  email = '',
-  password = '',
-  conPassword = ''
-) => {
-  if (
-    name.toString() !== '' &&
-    email.toString() !== '' &&
-    password.toString() !== '' &&
-    password.toString().length >= 6 &&
-    conPassword.toString() !== ''
-  ) {
-    return false;
-  } else return true;
-};
-
 const validateNameColor = (name = '') => {
   if (name.toString() === '') {
     return Palette.Primary;
@@ -102,6 +74,36 @@ const validateConPasswordIcon = (password1 = '', password2 = '') => {
   } else if (password2 === password1 && password2.toString().length >= 0) {
     return 'lock-check-outline';
   } else return 'lock-alert-outline';
+};
+
+const validateSignInFormSubmit = (email = '', password = '') => {
+  if (
+    EmailValidator.validate(email) &&
+    email.toString() !== '' &&
+    password.toString() !== '' &&
+    password.toString().length > 5
+  ) {
+    return false;
+  } else return true;
+};
+
+const validateCreateAccFormSubmit = (
+  name = '',
+  email = '',
+  password = '',
+  conPassword = '',
+  TOUchecked = Boolean
+) => {
+  if (
+    name.toString() !== '' &&
+    email.toString() !== '' &&
+    password.toString() !== '' &&
+    password.toString().length >= 6 &&
+    conPassword.toString() !== '' &&
+    TOUchecked
+  ) {
+    return false;
+  } else return true;
 };
 
 export {

@@ -1,3 +1,10 @@
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable prefer-const */
+/* eslint-disable no-unused-vars */
+/* eslint-disable react/jsx-boolean-value */
+/* eslint-disable no-unused-expressions */
+/* eslint-disable react-native/no-raw-text */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable global-require */
@@ -23,7 +30,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Flex, Box, Stack } from '@react-native-material/core';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Text } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
@@ -42,6 +49,7 @@ import {
   ContainedButtonCtrl,
   TextButtonCtrl,
 } from '../../components/ButtonCtrl.component';
+import Palette from '../../styles/Colors.style';
 // imports ////////////////////////////////
 
 SplashScreen.preventAutoHideAsync();
@@ -138,18 +146,13 @@ export default function Login() {
               disabled={validateSignInFormSubmit(localEmail, localPassword)}
             />
           </Box>
-          <Flex items="center" justify="start" direction="column">
+          <Flex items="center" justify="center" direction="row">
+            <Text>Do not have an account?</Text>
             {/* NAV BUTTON ================================ */}
             <TextButtonCtrl
+              compact
               icon="account-plus-outline"
-              title="Don't have an account? Create one"
-              onPress={() => goTo('signup')}
-            />
-          </Flex>
-          <Flex items="center" justify="start" direction="column">
-            <TextButtonCtrl
-              icon="file-outline"
-              title="شروط وأحكام"
+              title="Create one"
               onPress={() => goTo('signup')}
             />
           </Flex>

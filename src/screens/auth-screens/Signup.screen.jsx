@@ -1,3 +1,7 @@
+/* eslint-disable react-native/no-raw-text */
+/* eslint-disable react-native/no-inline-styles */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable prefer-const */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable global-require */
@@ -23,10 +27,11 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import { Flex, Box, Stack } from '@react-native-material/core';
-import { TextInput } from 'react-native-paper';
+import { TextInput, Checkbox, Text, Button } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import * as WebBrowser from 'expo-web-browser';
 import LogoAvatar from '../../components/LogoAvatar.component';
 import ScreenTitle from '../../components/ScreenTitle.component';
 import { firebase } from '../../../config/firebase';
@@ -46,6 +51,7 @@ import {
   ContainedButtonCtrl,
   TextButtonCtrl,
 } from '../../components/ButtonCtrl.component';
+import Palette from '../../styles/Colors.style';
 // imports ////////////////////////////////
 
 SplashScreen.preventAutoHideAsync();
@@ -61,6 +67,17 @@ export default function Signup() {
   const [showPassword, setShowPassword] = React.useState(false);
   const [conPassword, setConPassword] = React.useState('');
   const [showConPassword, setShowConPassword] = React.useState(false);
+  const [TOUchecked, setTOUChecked] = React.useState(false);
+
+  // open links in Web Browser:
+  const [WEBresult, setWEBResult] = React.useState(null);
+  const _handlePressButtonAsync = async () => {
+    // eslint-disable-next-line no-unused-vars
+    let result = await WebBrowser.openBrowserAsync(
+      'https://kareemabo3id.github.io/ourcar-TOU/'
+    );
+    setWEBResult(WEBresult);
+  };
 
   // font hook =============:
   const [fontsLoaded] = useFonts({
@@ -182,16 +199,22 @@ export default function Signup() {
             <InputCtrl
               start={
                 <TextInput.Icon
-                  icon={validateConPasswordIcon(conPassword)}
+                  icon={validateConPasswordIcon(conPassword, localPassword)}
                   size={20}
-                  iconColor={validateConPasswordColor(conPassword)}
+                  iconColor={validateConPasswordColor(
+                    conPassword,
+                    localPassword
+                  )}
                 />
               }
               textContentType="password"
               placeholder="Re-type password"
-              value={localPassword}
+              value={conPassword}
               onChangeText={(password) => setConPassword(password)}
-              activeOutlineColor={validateConPasswordColor(conPassword)}
+              activeOutlineColor={validateConPasswordColor(
+                conPassword,
+                localPassword
+              )}
               end={
                 <TextInput.Icon
                   onPress={() => setShowConPassword(!showConPassword)}
@@ -201,6 +224,36 @@ export default function Signup() {
               }
             />
           </Box>
+
+          <Flex direction="row" justify="start" items="center">
+            <Checkbox
+              color={Palette.Primary}
+              status={TOUchecked ? 'checked' : 'unchecked'}
+              onPress={() => {
+                setTOUChecked(!TOUchecked);
+              }}
+            />
+            <Text
+              onPress={() => {
+                setTOUChecked(!TOUchecked);
+              }}
+              style={{ marginRight: -5 }}
+            >
+              I agree to
+            </Text>
+            <Button
+              textColor={Palette.Primary}
+              compact
+              mode="text"
+              labelStyle={{
+                textDecorationLine: 'underline',
+                textDecorationColor: Palette.Primary,
+              }}
+              onPress={_handlePressButtonAsync}
+            >
+              Terms of Use Statement.
+            </Button>
+          </Flex>
           <Box pv={10}>
             {/* 3 LOGIN BUTTON ================================ */}
             <ContainedButtonCtrl
@@ -213,23 +266,18 @@ export default function Signup() {
                 localName,
                 localEmail,
                 localPassword,
-                conPassword
+                conPassword,
+                TOUchecked
               )}
             />
           </Box>
-          <Flex items="center" justify="start" direction="column">
+          <Flex items="center" justify="center" direction="row">
             {/* NAV BUTTON ================================ */}
+            <Text>Already have an account?</Text>
             <TextButtonCtrl
+              compact
               icon="login"
-              title="Already have an account? Login"
-              onPress={() => goTo('login')}
-            />
-          </Flex>
-          <Flex items="center" justify="start" direction="column">
-            {/* POLICY BUTTON ================================ */}
-            <TextButtonCtrl
-              icon="login"
-              title="Already have an account? Login"
+              title="Login"
               onPress={() => goTo('login')}
             />
           </Flex>

@@ -7,7 +7,7 @@ import Palette from '../styles/Colors.style';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
-function TextButtonCtrl({ icon, title, onPress, disabled }) {
+function TextButtonCtrl({ icon, title, onPress, disabled, compact }) {
   // local ui:
   return (
     <Button
@@ -15,6 +15,7 @@ function TextButtonCtrl({ icon, title, onPress, disabled }) {
       icon={icon}
       onPress={onPress}
       disabled={disabled}
+      compact={compact}
       // general:
       elevation={0}
       mode="text"
@@ -28,7 +29,7 @@ function TextButtonCtrl({ icon, title, onPress, disabled }) {
   );
 }
 
-function ContainedButtonCtrl({ icon, title, onPress, disabled }) {
+function ContainedButtonCtrl({ icon, title, onPress, disabled, compact }) {
   // local ui:
   return (
     <Button
@@ -36,6 +37,7 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled }) {
       icon={icon}
       onPress={onPress}
       disabled={disabled}
+      compact={compact}
       // general:
       elevation={0}
       mode="contained"

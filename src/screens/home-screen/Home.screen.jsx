@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/jsx-one-expression-per-line */
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/jsx-wrap-multilines */
