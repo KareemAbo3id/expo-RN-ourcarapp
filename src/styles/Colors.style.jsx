@@ -3,6 +3,7 @@ const Palette = {
   Secondary: '#abaeaf',
   Light: '#efefef',
   Error: '#982525',
+  White: '#ffffff',
 };
 
 export default Palette;

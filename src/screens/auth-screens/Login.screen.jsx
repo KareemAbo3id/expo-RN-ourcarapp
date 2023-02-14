@@ -1,3 +1,7 @@
+/* eslint-disable object-curly-newline */
+/* eslint-disable react/jsx-wrap-multilines */
+/* eslint-disable global-require */
+/* eslint-disable import/no-useless-path-segments */
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable no-alert */
 /* eslint-disable react/jsx-no-bind */
@@ -18,33 +22,48 @@ import {
   StatusBar,
   KeyboardAvoidingView,
 } from 'react-native';
-import {
-  Button,
-  IconButton,
-  TextInput,
-  Flex,
-  Box,
-  Stack,
-} from '@react-native-material/core';
-import * as EmailValidator from 'email-validator';
+import { Flex, Box, Stack } from '@react-native-material/core';
+import { TextInput } from 'react-native-paper';
 import { useNavigation } from '@react-navigation/native';
-import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import LogoAvatar from '../../components/LogoAvatar.component';
 import ScreenTitle from '../../components/ScreenTitle.component';
 import { firebase } from '../../../config/firebase';
-import Palette from '../../styles/Colors.style';
+import InputCtrl from '../../components/InputCtrl.component';
+import {
+  validateEmailColor,
+  validateEmailIcon,
+  validatePasswordColor,
+  validatePasswordIcon,
+  validateSignInFormSubmit,
+} from '../../validations/validation';
+import {
+  ContainedButtonCtrl,
+  TextButtonCtrl,
+} from '../../components/ButtonCtrl.component';
 // imports ////////////////////////////////
+
+SplashScreen.preventAutoHideAsync();
 
 // react function /////////////////////////
 export default function Login() {
   // local hooks =============:
-  const NavigationTo = useNavigation();
-  const [logEmail, setLogEmail] = React.useState('');
-  const [logPassword, setLogPassword] = React.useState('');
+  const Navigation = useNavigation();
+  const goTo = (path) => Navigation.navigate(path);
+  const [localEmail, setLocalEmail] = React.useState('');
+  const [localPassword, setLocalPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
 
-  // local handlers =============:
-  // login handler:
+  // font hook =============:
+  const [fontsLoaded] = useFonts({
+    cairo: require('./../../assets/fonts/Cairo-Regular.ttf'),
+  });
+  const onLayoutRootView = React.useCallback(async () => {
+    if (fontsLoaded) await SplashScreen.hideAsync();
+  }, [fontsLoaded]);
+
+  // login handler =============:
   const userLogin = async (email, password) => {
     try {
       await firebase
@@ -58,143 +77,73 @@ export default function Login() {
     }
   };
 
-  // validations:
-
-  const changeLogEmailColor = () => {
-    if (
-      EmailValidator.validate(logEmail) &&
-      logEmail.toString() !== '' &&
-      logEmail.toString().length >= 0
-    ) {
-      return Palette.Primary;
-    } else return Palette.Error;
-  };
-  const changeLogEmailIcon = () => {
-    if (
-      EmailValidator.validate(logEmail) &&
-      logEmail.toString() !== '' &&
-      logEmail.toString().length >= 0
-    ) {
-      return 'email-outline';
-    } else return 'email-alert-outline';
-  };
-  const changeLogPasswordColor = () => {
-    if (logPassword.toString() !== '' && logPassword.toString().length >= 6) {
-      return Palette.Primary;
-    } else return Palette.Error;
-  };
-  const changeLogPasswordIcon = () => {
-    if (logPassword.toString() !== '' && logPassword.toString().length >= 6) {
-      return 'lock-outline';
-    } else return 'lock-alert-outline';
-  };
-  const formValidateForLogBtnDisable = () => {
-    if (
-      EmailValidator.validate(logEmail) &&
-      logEmail.toString() !== '' &&
-      logPassword.toString() !== '' &&
-      logPassword.toString().length >= 6
-    ) {
-      return false;
-    } else return true;
-  };
-
   // local ui =============:
+  if (!fontsLoaded) return null;
   return (
-    <SafeAreaView style={Styles.SAVStyleForAndroid}>
+    <SafeAreaView style={Styles.SAVStyleForAndroid} onLayout={onLayoutRootView}>
       <KeyboardAvoidingView style={Styles.screenContainer}>
         <LogoAvatar />
-        <ScreenTitle title="Login" />
+        <ScreenTitle title="Sign In" />
         <Stack spacing={5}>
           <Box>
             {/* 1 LOG EMAIL INPUT ============================= */}
-            <TextInput
-              leading={(props) => (
-                <Icon
-                  name={changeLogEmailIcon()}
-                  {...props}
+            <InputCtrl
+              start={
+                <TextInput.Icon
+                  icon={validateEmailIcon(localEmail)}
                   size={20}
-                  color={changeLogEmailColor()}
+                  color={validateEmailColor(localEmail)}
                 />
-              )}
-              value={logEmail}
-              onChangeText={(text) => setLogEmail(text)}
-              color={changeLogEmailColor()}
-              label="E-mail"
-              autoCapitalize="none"
-              placeholder="e.g: johndoe@example.com"
-              autoCorrect={false}
-              textContentType="emailAddress"
+              }
               keyboardType="email-address"
-              variant="outlined"
+              textContentType="emailAddress"
+              placeholder="example@example.com"
+              value={localEmail}
+              onChangeText={(text) => setLocalEmail(text)}
+              activeOutlineColor={validateEmailColor(localEmail)}
             />
           </Box>
           <Box>
             {/* 2 LOG PASSWORD INPUT ========================== */}
-            <TextInput
-              leading={(props) => (
-                <Icon
-                  name={changeLogPasswordIcon()}
-                  {...props}
+            <InputCtrl
+              start={
+                <TextInput.Icon
+                  icon={validatePasswordIcon(localPassword)}
                   size={20}
-                  color={changeLogPasswordColor()}
+                  color={validatePasswordColor(localPassword)}
                 />
-              )}
-              value={logPassword}
-              onChangeText={(password) => setLogPassword(password)}
-              color={changeLogPasswordColor()}
-              label="Password"
-              autoCapitalize="none"
-              autoCorrect={false}
-              secureTextEntry={!showPassword}
+              }
               textContentType="password"
-              variant="outlined"
-              trailing={(props) => (
-                <IconButton
+              placeholder="xxxxxxxx"
+              value={localPassword}
+              onChangeText={(password) => setLocalPassword(password)}
+              activeOutlineColor={validatePasswordColor(localPassword)}
+              end={
+                <TextInput.Icon
                   onPress={() => setShowPassword(!showPassword)}
-                  icon={(props) =>
-                    showPassword ? (
-                      <Icon
-                        name="eye"
-                        {...props}
-                        color={Palette.Primary}
-                        size={20}
-                      />
-                    ) : (
-                      <Icon name="eye-off" {...props} size={20} />
-                    )
-                  }
-                  {...props}
+                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                  size={20}
                 />
-              )}
+              }
             />
           </Box>
-          <Box pt={10} pb={10}>
+          <Box pv={10}>
             {/* 3 LOGIN BUTTON ================================ */}
-            <Button
-              leading={(props) => <Icon name="login" {...props} />}
+            <ContainedButtonCtrl
+              icon="login"
+              title="Log In"
               onPress={() => {
-                userLogin(logEmail, logPassword);
+                userLogin(localEmail, localPassword);
               }}
-              variant="contained"
-              title="login"
-              disabled={formValidateForLogBtnDisable()}
-              color={Palette.Primary}
+              disabled={validateSignInFormSubmit(localEmail, localPassword)}
             />
           </Box>
           <Flex items="center" justify="start" direction="column">
             {/* NAV BUTTON ================================ */}
-            <Button
-              leading={(props) => (
-                <Icon name="account-plus-outline" {...props} />
-              )}
-              onPress={() => {
-                NavigationTo.navigate('signup');
-              }}
-              variant="text"
-              color={Palette.Primary}
-              uppercase={false}
+            <TextButtonCtrl
+              icon="account-plus-outline"
               title="Don't have an account? Create one"
+              onPress={() => goTo('signup')}
             />
           </Flex>
         </Stack>
@@ -212,7 +161,5 @@ const Styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  screenContainer: {
-    paddingHorizontal: 30,
-  },
+  screenContainer: { paddingHorizontal: 30 },
 });

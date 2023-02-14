@@ -1,4 +1,4 @@
-# Our Car App
+# Our Car
 
 ## an app for car washing services
 

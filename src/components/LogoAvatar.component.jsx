@@ -2,6 +2,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Avatar, Box } from '@react-native-material/core';
+import Palette from '../styles/Colors.style';
 // imports ////////////////////////////////
 
 const link =
@@ -15,6 +16,7 @@ export default function LogoAvatar() {
   return (
     <Box style={styles.imageBox}>
       <Avatar
+        color={Palette.White}
         size={140}
         image={{
           uri: `${link}`,
@@ -28,6 +30,7 @@ const styles = StyleSheet.create({
   imageBox: {
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 0,
     paddingBottom: 10,
   },
 });
