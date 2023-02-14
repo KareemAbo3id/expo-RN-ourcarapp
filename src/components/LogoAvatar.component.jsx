@@ -1,12 +1,11 @@
+/* eslint-disable global-require */
 /* eslint-disable operator-linebreak */
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { Avatar, Box } from '@react-native-material/core';
+import { Box } from '@react-native-material/core';
+import { Avatar } from 'react-native-paper';
 import Palette from '../styles/Colors.style';
 // imports ////////////////////////////////
-
-const link =
-  'https://raw.githubusercontent.com/KareemAbo3id/expo-RN-ourcarapp/master/src/assets/in-app-logo.png';
 
 // react function /////////////////////////
 export default function LogoAvatar() {
@@ -14,13 +13,11 @@ export default function LogoAvatar() {
 
   // the ui:
   return (
-    <Box style={styles.imageBox}>
-      <Avatar
-        color={Palette.White}
-        size={140}
-        image={{
-          uri: `${link}`,
-        }}
+    <Box style={styles.imageBox} mb={20}>
+      <Avatar.Image
+        source={require('../../assets/icon.png')}
+        size={100}
+        style={styles.avatarStyle}
       />
     </Box>
   );
@@ -31,6 +28,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 0,
-    paddingBottom: 10,
+  },
+  avatarStyle: {
+    backgroundColor: Palette.Primary,
+    borderRadius: 15,
+    shadowColor: Palette.Black,
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.23,
+    shadowRadius: 2.62,
+
+    elevation: 4,
   },
 });

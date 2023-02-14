@@ -18,7 +18,8 @@ function TextButtonCtrl({ icon, title, onPress, disabled }) {
       // general:
       elevation={0}
       mode="text"
-      buttonColor={Palette.Primary}
+      textColor={Palette.Primary}
+      style={Styles.cairoFont}
       contentStyle={Styles.cairoFont}
       uppercase={false}
     >
@@ -39,6 +40,7 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled }) {
       elevation={0}
       mode="contained"
       buttonColor={Palette.Primary}
+      style={[Styles.radius, Styles.cairoFont]}
       contentStyle={Styles.cairoFont}
       uppercase={false}
     >
@@ -48,7 +50,11 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled }) {
 }
 
 const Styles = StyleSheet.create({
-  cairoFont: { fontFamily: 'cairo', letterSpacing: 'normal' },
+  cairoFont: {
+    fontFamily: 'cairo',
+    letterSpacing: 'normal',
+  },
+  radius: { borderRadius: 4 },
 });
 
 export { ContainedButtonCtrl, TextButtonCtrl };

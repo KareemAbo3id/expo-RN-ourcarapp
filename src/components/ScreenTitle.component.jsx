@@ -1,6 +1,7 @@
 /* eslint-disable react-native/no-inline-styles */
 import React from 'react';
-import { Flex, Text } from '@react-native-material/core';
+import { Flex } from '@react-native-material/core';
+import { Text } from 'react-native-paper';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
@@ -9,8 +10,8 @@ export default function ScreenTitle({ title }) {
 
   // the ui:
   return (
-    <Flex items="center" pb={20} justify="center">
-      <Text variant="h5" style={{ fontFamily: 'cairo' }}>
+    <Flex items="center" justify="center" mb={10}>
+      <Text variant="headlineMedium" style={{ fontFamily: 'cairo' }}>
         {title}
       </Text>
     </Flex>

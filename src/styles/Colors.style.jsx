@@ -4,6 +4,7 @@ const Palette = {
   Light: '#efefef',
   Error: '#982525',
   White: '#ffffff',
+  Black: '#000000',
 };
 
 export default Palette;

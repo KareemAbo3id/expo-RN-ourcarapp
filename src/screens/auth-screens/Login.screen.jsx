@@ -81,7 +81,7 @@ export default function Login() {
   if (!fontsLoaded) return null;
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid} onLayout={onLayoutRootView}>
-      <KeyboardAvoidingView style={Styles.screenContainer}>
+      <KeyboardAvoidingView>
         <LogoAvatar />
         <ScreenTitle title="Sign In" />
         <Stack spacing={5}>
@@ -92,7 +92,7 @@ export default function Login() {
                 <TextInput.Icon
                   icon={validateEmailIcon(localEmail)}
                   size={20}
-                  color={validateEmailColor(localEmail)}
+                  iconColor={validateEmailColor(localEmail)}
                 />
               }
               keyboardType="email-address"
@@ -110,7 +110,7 @@ export default function Login() {
                 <TextInput.Icon
                   icon={validatePasswordIcon(localPassword)}
                   size={20}
-                  color={validatePasswordColor(localPassword)}
+                  iconColor={validatePasswordColor(localPassword)}
                 />
               }
               textContentType="password"
@@ -146,6 +146,13 @@ export default function Login() {
               onPress={() => goTo('signup')}
             />
           </Flex>
+          <Flex items="center" justify="start" direction="column">
+            <TextButtonCtrl
+              icon="file-outline"
+              title="شروط وأحكام"
+              onPress={() => goTo('signup')}
+            />
+          </Flex>
         </Stack>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -155,11 +162,10 @@ export default function Login() {
 // local styles:
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
     backgroundColor: '#fff',
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     justifyContent: 'center',
-    alignItems: 'center',
+    paddingHorizontal: 25,
   },
-  screenContainer: { paddingHorizontal: 30 },
 });
