@@ -15,6 +15,8 @@ export default function InputCtrl({
   value,
   onChangeText,
   activeOutlineColor,
+  contentStyle,
+  secureTextEntry,
 }) {
   // local hooks:
 
@@ -34,11 +36,12 @@ export default function InputCtrl({
       activeOutlineColor={activeOutlineColor}
       // general:
       mode="outlined"
+      secureTextEntry={secureTextEntry}
       autoCapitalize="none"
       autoCorrect={false}
       placeholderTextColor={Palette.Secondary}
       outlineColor={Palette.Primary}
-      contentStyle={Styles.cairoFont}
+      contentStyle={contentStyle}
       style={(Styles.cairoFont, { backgroundColor: Palette.White })}
     />
   );

@@ -7,11 +7,7 @@ import Palette from '../styles/Colors.style';
 const validateEmailColor = (email = '') => {
   if (email.toString() === '') {
     return Palette.Primary;
-  } else if (
-    EmailValidator.validate(email) &&
-    email.toString() !== '' &&
-    email.toString().length >= 0
-  ) {
+  } else if (EmailValidator.validate(email) && email.toString() !== '') {
     return Palette.Primary;
   } else return Palette.Error;
 };
@@ -19,11 +15,7 @@ const validateEmailColor = (email = '') => {
 const validateEmailIcon = (email = '') => {
   if (email.toString() === '') {
     return 'email-outline';
-  } else if (
-    EmailValidator.validate(email) &&
-    email.toString() !== '' &&
-    email.toString().length >= 0
-  ) {
+  } else if (EmailValidator.validate(email) && email.toString() !== '') {
     return 'email-outline';
   } else return 'email-alert-outline';
 };
@@ -47,7 +39,7 @@ const validatePasswordIcon = (password = '') => {
 const validateNameColor = (name = '') => {
   if (name.toString() === '') {
     return Palette.Primary;
-  } else if (name.toString() !== '' && name.toString().length >= 6) {
+  } else if (name.toString() !== '') {
     return Palette.Primary;
   } else return Palette.Error;
 };
@@ -55,7 +47,7 @@ const validateNameColor = (name = '') => {
 const validateNameIcon = (name = '') => {
   if (name.toString() === '') {
     return 'account-outline';
-  } else if (name.toString() !== '' && name.toString().length >= 6) {
+  } else if (name.toString() !== '') {
     return 'account-outline';
   } else return 'account-alert-outline';
 };
@@ -73,6 +65,22 @@ const validateConPasswordIcon = (password1 = '', password2 = '') => {
     return 'lock-check-outline';
   } else if (password2 === password1 && password2.toString().length >= 0) {
     return 'lock-check-outline';
+  } else return 'lock-alert-outline';
+};
+
+const validateUpdatePasswordColor = (password = '') => {
+  if (password.toString() === '') {
+    return Palette.Primary;
+  } else if (password.toString() !== '' && password.toString().length >= 6) {
+    return Palette.Primary;
+  } else return Palette.Error;
+};
+
+const validateUpdatePasswordIcon = (password = '') => {
+  if (password.toString() === '') {
+    return 'lock-outline';
+  } else if (password.toString() !== '' && password.toString().length >= 6) {
+    return 'lock-outline';
   } else return 'lock-alert-outline';
 };
 
@@ -106,6 +114,12 @@ const validateCreateAccFormSubmit = (
   } else return true;
 };
 
+const validateForgotPasswordFormSubmit = (email = '') => {
+  if (EmailValidator.validate(email) && email.toString() !== '') {
+    return false;
+  } else return true;
+};
+
 export {
   validateEmailColor,
   validateEmailIcon,
@@ -117,4 +131,7 @@ export {
   validateNameIcon,
   validateConPasswordColor,
   validateConPasswordIcon,
+  validateForgotPasswordFormSubmit,
+  validateUpdatePasswordColor,
+  validateUpdatePasswordIcon,
 };

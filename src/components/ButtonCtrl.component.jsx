@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-wrap-multilines */
 import React from 'react';
@@ -20,8 +21,8 @@ function TextButtonCtrl({ icon, title, onPress, disabled, compact }) {
       elevation={0}
       mode="text"
       textColor={Palette.Primary}
-      style={Styles.cairoFont}
-      contentStyle={Styles.cairoFont}
+      style={Styles.radius}
+      labelStyle={Styles.cairoFont}
       uppercase={false}
     >
       {title}
@@ -42,8 +43,8 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled, compact }) {
       elevation={0}
       mode="contained"
       buttonColor={Palette.Primary}
-      style={[Styles.radius, Styles.cairoFont]}
-      contentStyle={Styles.cairoFont}
+      style={Styles.radius}
+      labelStyle={Styles.cairoFont}
       uppercase={false}
     >
       {title}
@@ -52,10 +53,7 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled, compact }) {
 }
 
 const Styles = StyleSheet.create({
-  cairoFont: {
-    fontFamily: 'cairo',
-    letterSpacing: 'normal',
-  },
+  cairoFont: { fontFamily: 'cairo', lineHeight: 25 },
   radius: { borderRadius: 4 },
 });
 

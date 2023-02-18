@@ -1,6 +1,7 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable global-require */
 import React, { useEffect } from 'react';
+import { I18nManager } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { firebase } from './config/firebase';
@@ -8,8 +9,11 @@ import { firebase } from './config/firebase';
 import Login from './src/screens/auth-screens/Login.screen';
 import Signup from './src/screens/auth-screens/Signup.screen';
 import Home from './src/screens/home-screen/Home.screen';
+import ForgotPassword from './src/screens/auth-screens/ForgotPassword.screen';
 // imports ////////////////////////////////
 
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
 const Stack = createNativeStackNavigator();
 
 // react function /////////////////////////
@@ -40,7 +44,7 @@ function App() {
   // if user not logged in:
   if (!initUser) {
     return (
-      <Stack.Navigator>
+      <Stack.Navigator id={1}>
         <Stack.Screen
           name="login"
           component={Login}
@@ -50,6 +54,11 @@ function App() {
           name="signup"
           component={Signup}
           options={{ headerShown: false, animation: 'slide_from_left' }}
+        />
+        <Stack.Screen
+          name="forgotPassword"
+          component={ForgotPassword}
+          options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
       </Stack.Navigator>
     );
@@ -61,7 +70,7 @@ function App() {
       <Stack.Screen
         name="home"
         component={Home}
-        options={{ headerShown: false, animation: 'slide_from_bottom' }}
+        options={{ headerShown: false, animation: 'flip' }}
       />
     </Stack.Navigator>
   );
@@ -69,7 +78,7 @@ function App() {
 
 export default function AppNavigation() {
   return (
-    <NavigationContainer>
+    <NavigationContainer independent>
       <App />
     </NavigationContainer>
   );

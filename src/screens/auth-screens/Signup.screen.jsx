@@ -22,9 +22,9 @@ import React from 'react';
 import {
   StyleSheet,
   SafeAreaView,
-  Platform,
   StatusBar,
   KeyboardAvoidingView,
+  I18nManager,
 } from 'react-native';
 import { Flex, Box, Stack } from '@react-native-material/core';
 import { TextInput, Checkbox, Text, Button } from 'react-native-paper';
@@ -51,9 +51,14 @@ import {
   ContainedButtonCtrl,
   TextButtonCtrl,
 } from '../../components/ButtonCtrl.component';
+import TOU from '../../components/TOU.component';
 import Palette from '../../styles/Colors.style';
+import { Font, TextLeft } from '../../styles/Font.style';
+import DialogCtrl from '../../components/DialogCtrl.component';
 // imports ////////////////////////////////
 
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
 SplashScreen.preventAutoHideAsync();
 
 // react function /////////////////////////
@@ -68,6 +73,14 @@ export default function Signup() {
   const [conPassword, setConPassword] = React.useState('');
   const [showConPassword, setShowConPassword] = React.useState(false);
   const [TOUchecked, setTOUChecked] = React.useState(false);
+
+  // Dialog =============:
+  const [showDialog, setShowDialog] = React.useState(false);
+
+  const [dialogContent, setDialogContent] = React.useState('');
+  const [closeDialog, setCloseDialog] = React.useState(false);
+  const [dialogActionButtonTitle, setDialogActionButtonTitle] =
+    React.useState('');
 
   // open links in Web Browser:
   const [WEBresult, setWEBResult] = React.useState(null);
@@ -99,13 +112,11 @@ export default function Signup() {
             handleCodeInApp: true,
             url: 'https://our-car-app-edf68.firebaseapp.com/',
           })
-          .then(() => {
-            alert(
-              'تم إرسال رابط التحقق في الايميل الخاص بك\nالرجاء التحقق من صندوق junk او spam'
-            );
-          })
-          .catch((error) => {
-            alert(error.message);
+          .catch(() => {
+            setDialogContent('حدث خطأ');
+            setCloseDialog(true);
+            setDialogActionButtonTitle('إلغاء');
+            setShowDialog(true);
           })
           .then(() => {
             firebase
@@ -117,179 +128,216 @@ export default function Signup() {
                 email,
               });
           })
-          .catch((error) => {
-            alert(error.message);
+          .catch(() => {
+            setShowDialog(true);
+            setDialogContent('حدث خطأ');
+            setCloseDialog(true);
+            setDialogActionButtonTitle('إلغاء');
           });
       })
-      .catch((error) => {
-        alert(error.message);
+      .catch(() => {
+        setShowDialog(true);
+        setDialogContent('البريد الالكتروني المدخل مسجل بالفعل');
+        setCloseDialog(false);
+        setDialogActionButtonTitle('تسجيل الدخول');
       });
   };
 
   // local ui =============:
   if (!fontsLoaded) return null;
-  return (
-    <SafeAreaView style={Styles.SAVStyleForAndroid} onLayout={onLayoutRootView}>
-      <KeyboardAvoidingView>
-        <LogoAvatar />
-        <ScreenTitle title="Create Account" />
-        <Stack spacing={5}>
-          <Box>
-            {/* 1 LOG EMAIL INPUT ============================= */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validateNameIcon(localName)}
-                  size={20}
-                  iconColor={validateNameColor(localName)}
-                />
-              }
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="Type your full name"
-              value={localName}
-              onChangeText={(text) => setLocalName(text)}
-              activeOutlineColor={validateNameColor(localName)}
-            />
-          </Box>
-          <Box>
-            {/* 1 LOG EMAIL INPUT ============================= */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validateEmailIcon(localEmail)}
-                  size={20}
-                  iconColor={validateEmailColor(localEmail)}
-                />
-              }
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="example@example.com"
-              value={localEmail}
-              onChangeText={(text) => setLocalEmail(text)}
-              activeOutlineColor={validateEmailColor(localEmail)}
-            />
-          </Box>
-          <Box>
-            {/* 2 LOG PASSWORD INPUT ========================== */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validatePasswordIcon(localPassword)}
-                  size={20}
-                  iconColor={validatePasswordColor(localPassword)}
-                />
-              }
-              textContentType="password"
-              placeholder="Type new password"
-              value={localPassword}
-              onChangeText={(password) => setLocalPassword(password)}
-              activeOutlineColor={validatePasswordColor(localPassword)}
-              end={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-            />
-          </Box>
-          <Box>
-            {/* 2 LOG PASSWORD INPUT ========================== */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validateConPasswordIcon(conPassword, localPassword)}
-                  size={20}
-                  iconColor={validateConPasswordColor(
-                    conPassword,
-                    localPassword
-                  )}
-                />
-              }
-              textContentType="password"
-              placeholder="Re-type password"
-              value={conPassword}
-              onChangeText={(password) => setConPassword(password)}
-              activeOutlineColor={validateConPasswordColor(
-                conPassword,
-                localPassword
-              )}
-              end={
-                <TextInput.Icon
-                  onPress={() => setShowConPassword(!showConPassword)}
-                  icon={showConPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-            />
-          </Box>
 
-          <Flex direction="row" justify="start" items="center">
-            <Checkbox
-              color={Palette.Primary}
-              status={TOUchecked ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-            />
-            <Text
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-              style={{ marginRight: -5 }}
-            >
-              I agree to
-            </Text>
-            <Button
-              textColor={Palette.Primary}
-              compact
-              mode="text"
-              labelStyle={{
-                textDecorationLine: 'underline',
-                textDecorationColor: Palette.Primary,
-              }}
-              onPress={_handlePressButtonAsync}
-            >
-              Terms of Use Statement.
-            </Button>
-          </Flex>
-          <Box pv={10}>
-            {/* 3 LOGIN BUTTON ================================ */}
-            <ContainedButtonCtrl
-              icon="account-plus"
-              title="Create Account"
-              onPress={() => {
-                userCreactAccount(localName, localEmail, localPassword);
-              }}
-              disabled={validateCreateAccFormSubmit(
-                localName,
-                localEmail,
-                localPassword,
-                conPassword,
-                TOUchecked
-              )}
-            />
-          </Box>
-          <Flex items="center" justify="center" direction="row">
-            {/* NAV BUTTON ================================ */}
-            <Text>Already have an account?</Text>
-            <TextButtonCtrl
-              compact
-              icon="login"
-              title="Login"
-              onPress={() => goTo('login')}
-            />
-          </Flex>
-        </Stack>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+  if (showDialog) {
+    return (
+      <DialogCtrl
+        visible={showDialog}
+        onDismiss={() => {
+          setShowDialog(false);
+        }}
+        content={dialogContent}
+        actionButtonOnPress={
+          closeDialog
+            ? () => {
+                setShowDialog(false);
+              }
+            : () => {
+                goTo('login');
+              }
+        }
+        actionButtonTitle={dialogActionButtonTitle}
+      />
+    );
+  } else {
+    return (
+      <SafeAreaView
+        style={Styles.SAVStyleForAndroid}
+        onLayout={onLayoutRootView}
+      >
+        <StatusBar backgroundColor={Palette.DarkPrimary} />
+        <KeyboardAvoidingView>
+          <LogoAvatar size={80} />
+          <ScreenTitle title="انشاء حساب جديد" />
+          <Stack spacing={5}>
+            <Box>
+              {/* 1 LOG EMAIL INPUT ============================= */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validateNameIcon(localName)}
+                    size={20}
+                    iconColor={validateNameColor(localName)}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                placeholder="full name الاسم بالكامل"
+                value={localName}
+                onChangeText={(text) => setLocalName(text)}
+                activeOutlineColor={validateNameColor(localName)}
+              />
+            </Box>
+            <Box>
+              {/* 1 LOG EMAIL INPUT ============================= */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validateEmailIcon(localEmail)}
+                    size={20}
+                    iconColor={validateEmailColor(localEmail)}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                placeholder="e-mail البريد الالكتروني"
+                value={localEmail}
+                onChangeText={(text) => setLocalEmail(text)}
+                activeOutlineColor={validateEmailColor(localEmail)}
+              />
+            </Box>
+            <Box>
+              {/* 2 LOG PASSWORD INPUT ========================== */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validatePasswordIcon(localPassword)}
+                    size={20}
+                    iconColor={validatePasswordColor(localPassword)}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                textContentType="password"
+                placeholder="password رمز المرور"
+                secureTextEntry={!showPassword}
+                value={localPassword}
+                onChangeText={(password) => setLocalPassword(password)}
+                activeOutlineColor={validatePasswordColor(localPassword)}
+                start={
+                  <TextInput.Icon
+                    onPress={() => setShowPassword(!showPassword)}
+                    icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                  />
+                }
+              />
+            </Box>
+            <Box>
+              {/* 2 LOG PASSWORD INPUT ========================== */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validateConPasswordIcon(conPassword, localPassword)}
+                    size={20}
+                    iconColor={validateConPasswordColor(
+                      conPassword,
+                      localPassword
+                    )}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                textContentType="password"
+                placeholder="confirm password تأكيد الرمز"
+                secureTextEntry={!showConPassword}
+                value={conPassword}
+                onChangeText={(password) => setConPassword(password)}
+                activeOutlineColor={validateConPasswordColor(
+                  conPassword,
+                  localPassword
+                )}
+                start={
+                  <TextInput.Icon
+                    onPress={() => setShowConPassword(!showConPassword)}
+                    icon={showConPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                  />
+                }
+              />
+            </Box>
+
+            <Flex direction="row" justify="start" items="center">
+              <Checkbox
+                color={Palette.Primary}
+                status={TOUchecked ? 'checked' : 'unchecked'}
+                onPress={() => {
+                  setTOUChecked(!TOUchecked);
+                }}
+              />
+              <Text
+                onPress={() => {
+                  setTOUChecked(!TOUchecked);
+                }}
+                style={{ marginRight: -5, fontFamily: Font.cairo }}
+              >
+                أوافق على
+              </Text>
+              <Button
+                textColor={Palette.Primary}
+                compact
+                mode="text"
+                labelStyle={{
+                  fontFamily: Font.cairo,
+                  lineHeight: 30,
+                }}
+                onPress={_handlePressButtonAsync}
+              >
+                سياسة الاستخدام والخصوصية
+              </Button>
+            </Flex>
+            <Box>
+              {/* 3 LOGIN BUTTON ================================ */}
+              <ContainedButtonCtrl
+                title="انشاء الحساب"
+                onPress={() => {
+                  userCreactAccount(localName, localEmail, localPassword);
+                }}
+                disabled={validateCreateAccFormSubmit(
+                  localName,
+                  localEmail,
+                  localPassword,
+                  conPassword,
+                  TOUchecked
+                )}
+              />
+            </Box>
+            <Flex items="center" justify="center" direction="row">
+              {/* NAV BUTTON ================================ */}
+              <Text style={{ fontFamily: Font.cairo }}>لديك حساب؟</Text>
+              <TextButtonCtrl
+                compact
+                title="سجل دخولك"
+                onPress={() => goTo('login')}
+              />
+            </Flex>
+            <TOU />
+          </Stack>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
 }
 
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',

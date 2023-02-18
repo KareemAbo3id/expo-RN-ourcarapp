@@ -8,15 +8,15 @@ import Palette from '../styles/Colors.style';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
-export default function LogoAvatar() {
+export default function LogoAvatar({ size }) {
   // local hooks, handlers:
 
   // the ui:
   return (
-    <Box style={styles.imageBox} mb={20}>
+    <Box style={styles.imageBox} mb={5}>
       <Avatar.Image
+        size={size}
         source={require('../../assets/icon.png')}
-        size={100}
         style={styles.avatarStyle}
       />
     </Box>

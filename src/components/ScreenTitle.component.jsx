@@ -10,8 +10,11 @@ export default function ScreenTitle({ title }) {
 
   // the ui:
   return (
-    <Flex items="center" justify="center" mb={10}>
-      <Text variant="headlineMedium" style={{ fontFamily: 'cairo' }}>
+    <Flex items="center" justify="center">
+      <Text
+        variant="headlineSmall"
+        style={{ fontFamily: 'cairo', lineHeight: 50, textAlign: 'center' }}
+      >
         {title}
       </Text>
     </Flex>

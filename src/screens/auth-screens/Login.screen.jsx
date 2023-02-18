@@ -25,9 +25,9 @@ import React from 'react';
 import {
   StyleSheet,
   SafeAreaView,
-  Platform,
   StatusBar,
   KeyboardAvoidingView,
+  I18nManager,
 } from 'react-native';
 import { Flex, Box, Stack } from '@react-native-material/core';
 import { TextInput, Text } from 'react-native-paper';
@@ -49,9 +49,14 @@ import {
   ContainedButtonCtrl,
   TextButtonCtrl,
 } from '../../components/ButtonCtrl.component';
+import TOU from '../../components/TOU.component';
 import Palette from '../../styles/Colors.style';
+import { Font, TextLeft } from '../../styles/Font.style';
+import DialogCtrl from '../../components/DialogCtrl.component';
 // imports ////////////////////////////////
 
+I18nManager.forceRTL(true);
+I18nManager.allowRTL(true);
 SplashScreen.preventAutoHideAsync();
 
 // react function /////////////////////////
@@ -62,6 +67,9 @@ export default function Login() {
   const [localEmail, setLocalEmail] = React.useState('');
   const [localPassword, setLocalPassword] = React.useState('');
   const [showPassword, setShowPassword] = React.useState(false);
+
+  // Dialog =============:
+  const [showDialog, setShowDialog] = React.useState(false);
 
   // font hook =============:
   const [fontsLoaded] = useFonts({
@@ -77,97 +85,126 @@ export default function Login() {
       await firebase
         .auth()
         .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          alert('أهلاً\nتم تسجيل الدخول بنجاح');
-        });
+        .then(() => {});
     } catch (error) {
-      alert(error.message);
+      setShowDialog(true);
     }
   };
 
   // local ui =============:
   if (!fontsLoaded) return null;
-  return (
-    <SafeAreaView style={Styles.SAVStyleForAndroid} onLayout={onLayoutRootView}>
-      <KeyboardAvoidingView>
-        <LogoAvatar />
-        <ScreenTitle title="Sign In" />
-        <Stack spacing={5}>
-          <Box>
-            {/* 1 LOG EMAIL INPUT ============================= */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validateEmailIcon(localEmail)}
-                  size={20}
-                  iconColor={validateEmailColor(localEmail)}
-                />
-              }
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="example@example.com"
-              value={localEmail}
-              onChangeText={(text) => setLocalEmail(text)}
-              activeOutlineColor={validateEmailColor(localEmail)}
-            />
-          </Box>
-          <Box>
-            {/* 2 LOG PASSWORD INPUT ========================== */}
-            <InputCtrl
-              start={
-                <TextInput.Icon
-                  icon={validatePasswordIcon(localPassword)}
-                  size={20}
-                  iconColor={validatePasswordColor(localPassword)}
-                />
-              }
-              textContentType="password"
-              placeholder="xxxxxxxx"
-              value={localPassword}
-              onChangeText={(password) => setLocalPassword(password)}
-              activeOutlineColor={validatePasswordColor(localPassword)}
-              end={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-            />
-          </Box>
-          <Box pv={10}>
-            {/* 3 LOGIN BUTTON ================================ */}
-            <ContainedButtonCtrl
-              icon="login"
-              title="Log In"
-              onPress={() => {
-                userLogin(localEmail, localPassword);
-              }}
-              disabled={validateSignInFormSubmit(localEmail, localPassword)}
-            />
-          </Box>
-          <Flex items="center" justify="center" direction="row">
-            <Text>Do not have an account?</Text>
-            {/* NAV BUTTON ================================ */}
-            <TextButtonCtrl
-              compact
-              icon="account-plus-outline"
-              title="Create one"
-              onPress={() => goTo('signup')}
-            />
-          </Flex>
-        </Stack>
-      </KeyboardAvoidingView>
-    </SafeAreaView>
-  );
+
+  if (showDialog) {
+    return (
+      <DialogCtrl
+        visible={showDialog}
+        onDismiss={() => {
+          setShowDialog(false);
+        }}
+        content="خطأ في البريد الالكتروني او رمز المرور"
+        actionButtonOnPress={() => {
+          setShowDialog(false);
+        }}
+        actionButtonTitle="حاول مجدداً"
+      />
+    );
+  } else {
+    return (
+      <SafeAreaView
+        style={Styles.SAVStyleForAndroid}
+        onLayout={onLayoutRootView}
+      >
+        <StatusBar backgroundColor={Palette.DarkPrimary} />
+        <KeyboardAvoidingView>
+          <LogoAvatar size={80} />
+          <ScreenTitle title="تسجيل الدخول" />
+          <Stack spacing={5}>
+            <Box>
+              {/* 1 LOG EMAIL INPUT ============================= */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validateEmailIcon(localEmail)}
+                    size={20}
+                    iconColor={validateEmailColor(localEmail)}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                placeholder="e-mail البريد الالكتروني"
+                value={localEmail}
+                onChangeText={(text) => setLocalEmail(text)}
+                activeOutlineColor={validateEmailColor(localEmail)}
+              />
+            </Box>
+            <Box>
+              {/* 2 LOG PASSWORD INPUT ========================== */}
+              <InputCtrl
+                end={
+                  <TextInput.Icon
+                    icon={validatePasswordIcon(localPassword)}
+                    size={20}
+                    iconColor={validatePasswordColor(localPassword)}
+                  />
+                }
+                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                keyboardType="default"
+                textContentType="password"
+                placeholder="password رمز المرور"
+                value={localPassword}
+                secureTextEntry={!showPassword}
+                onChangeText={(password) => setLocalPassword(password)}
+                activeOutlineColor={validatePasswordColor(localPassword)}
+                start={
+                  <TextInput.Icon
+                    onPress={() => setShowPassword(!showPassword)}
+                    icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
+                    size={20}
+                  />
+                }
+              />
+            </Box>
+            <Box pt={10}>
+              {/* 3 LOGIN BUTTON ================================ */}
+              <ContainedButtonCtrl
+                title="دخول"
+                onPress={() => {
+                  userLogin(localEmail, localPassword);
+                }}
+                disabled={validateSignInFormSubmit(localEmail, localPassword)}
+              />
+            </Box>
+            <Flex items="center" justify="center" direction="row">
+              {/* FORGOT PASSWORD BUTTON ================================ */}
+              <TextButtonCtrl
+                compact
+                title="نسيت رمز المرور؟"
+                onPress={() => goTo('forgotPassword')}
+              />
+            </Flex>
+            <Flex items="center" justify="center" direction="row">
+              {/* NAV BUTTON ================================ */}
+              <Text style={{ fontFamily: Font.cairo }}>ليس لديك حساب؟</Text>
+              <TextButtonCtrl
+                compact
+                title="سجل الان"
+                onPress={() => goTo('signup')}
+              />
+            </Flex>
+            <TOU />
+          </Stack>
+        </KeyboardAvoidingView>
+      </SafeAreaView>
+    );
+  }
 }
 
 // local styles:
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
-    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 0,
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: Palette.White,
     justifyContent: 'center',
     paddingHorizontal: 25,
   },
