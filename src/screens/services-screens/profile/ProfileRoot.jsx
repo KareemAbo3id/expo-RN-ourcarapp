@@ -55,10 +55,8 @@ export default function ProfileRoot() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          if (setCurrentUserAddress(snapshot.data().userAddress)) {
-            setCurrentUserAddress(snapshot.data().userAddress);
-          } else {
-            setCurrentUserAddress('');
+          if (setCurrentUserAddress(snapshot?.data()?.userAddress)) {
+            setCurrentUserAddress(snapshot?.data()?.userAddress);
           }
         } else {
           console.log('user does not exist');
@@ -74,10 +72,8 @@ export default function ProfileRoot() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          if (setCurrentUserCar(snapshot.data().userCar)) {
-            setCurrentUserCar(snapshot.data().userCar);
-          } else {
-            setCurrentUserCar('');
+          if (setCurrentUserCar(snapshot?.data()?.userCar)) {
+            setCurrentUserCar(snapshot?.data()?.userCar);
           }
         } else {
           console.log('user does not exist');
