@@ -38,9 +38,16 @@ export default function ProfileRoot() {
   const [refreshing, setRefreshing] = React.useState(false);
   const { currentUser } = firebase.auth();
   const isCurrentUserVerified = firebase.auth().currentUser.emailVerified;
-  const [currentUserData, setCurrentUserData] = React.useState('');
+  const [currentUserAddress, setCurrentUserAddress] = React.useState('');
+  const [currentUserCar, setCurrentUserCar] = React.useState('');
 
-  const getData = () => {
+  // local handler =============:
+
+  const getCurrentUserVerified = () => {
+    return firebase.auth().currentUser.emailVerified;
+  };
+
+  const getAddressData = () => {
     firebase
       .firestore()
       .collection('users')
@@ -48,24 +55,50 @@ export default function ProfileRoot() {
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
-          setCurrentUserData(snapshot.data());
+          if (setCurrentUserAddress(snapshot.data().userAddress)) {
+            setCurrentUserAddress(snapshot.data().userAddress);
+          } else {
+            setCurrentUserAddress('');
+          }
         } else {
           console.log('user does not exist');
         }
       });
   };
 
+  const getCarData = () => {
+    firebase
+      .firestore()
+      .collection('users')
+      .doc(currentUser.uid)
+      .get()
+      .then((snapshot) => {
+        if (snapshot.exists) {
+          if (setCurrentUserCar(snapshot.data().userCar)) {
+            setCurrentUserCar(snapshot.data().userCar);
+          } else {
+            setCurrentUserCar('');
+          }
+        } else {
+          console.log('user does not exist');
+        }
+      });
+  };
+
+  React.useEffect(() => {
+    getAddressData();
+    getCarData();
+  }, []);
+
+  // onRefresh =============:
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    getData();
+    getAddressData();
+    getCarData();
+    getCurrentUserVerified();
     setTimeout(() => {
       setRefreshing(false);
     }, 800);
-  }, []);
-
-  // local handler =============:
-  React.useEffect(() => {
-    getData();
   }, []);
 
   // Local ui =============:
@@ -99,120 +132,187 @@ export default function ProfileRoot() {
               <List.Subheader style={{ fontFamily: Font.cairo }}>
                 العناوين
               </List.Subheader>
-              <Card
-                style={{
-                  backgroundColor: Palette.White,
-                  borderColor: Palette.Light,
-                  borderWidth: 1,
-                }}
-                mode="contained"
-              >
-                <Card.Content>
-                  <Wrap direction="row" justify="start" items="center">
-                    <MaterialCommunityIcons
-                      name="map-marker"
-                      size={15}
-                      color={Palette.DarkGray}
-                    />
-                    <Text style={{ paddingLeft: 5, paddingRight: 2 }} />
-                    <Text
-                      variant="bodyMedium"
-                      style={{
-                        fontFamily: Font.cairo,
-                        color: Palette.DarkGray,
-                      }}
-                    >
-                      {currentUserData?.userAddress?.reg}
-                    </Text>
-                    <Text style={{ paddingLeft: 5, paddingRight: 2 }}>،</Text>
-                    <Text
-                      variant="bodyMedium"
-                      style={{
-                        fontFamily: Font.cairo,
-                        color: Palette.DarkGray,
-                      }}
-                    >
-                      {currentUserData?.userAddress?.city}
-                    </Text>
-                    <Text style={{ paddingLeft: 5, paddingRight: 2 }}>،</Text>
-                    <Text
-                      variant="bodyMedium"
-                      style={{
-                        fontFamily: Font.cairo,
-                        color: Palette.DarkGray,
-                      }}
-                    >
-                      {currentUserData?.userAddress?.dis}
-                    </Text>
-                  </Wrap>
-                </Card.Content>
-              </Card>
+              {currentUserAddress ? (
+                <Card
+                  style={{
+                    backgroundColor: Palette.White,
+                    borderColor: Palette.Light,
+                    borderWidth: 1,
+                  }}
+                  mode="contained"
+                >
+                  <Card.Content>
+                    <Wrap direction="row" justify="start" items="center">
+                      <MaterialCommunityIcons
+                        name="map-marker"
+                        size={15}
+                        color={Palette.DarkGray}
+                      />
+                      <Text style={{ paddingHorizontal: 2 }} />
 
-              <List.Item
-                titleStyle={{
-                  color: Palette.Primary,
-                  fontFamily: Font.cairo,
-                }}
-                onPress={() => {
-                  goTo('CreateAddress');
-                }}
-                title="تحديث العنوان"
-                left={(props) => (
-                  <List.Icon
-                    {...props}
-                    icon="pencil-box"
-                    color={Palette.Primary}
-                  />
-                )}
-              />
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserAddress?.reg}
+                      </Text>
+                      <Text style={{ paddingHorizontal: 2 }}>-</Text>
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserAddress?.city}
+                      </Text>
+                      <Text style={{ paddingHorizontal: 2 }}>-</Text>
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserAddress?.dis}
+                      </Text>
+                    </Wrap>
+                  </Card.Content>
+                </Card>
+              ) : null}
+              <Box>
+                <List.Item
+                  titleStyle={{
+                    color: Palette.Primary,
+                    fontFamily: Font.cairo,
+                  }}
+                  onPress={() => {
+                    goTo('CreateAddress');
+                  }}
+                  title={!currentUserAddress ? 'اضافة عنوان' : 'تحديث العنوان'}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon={!currentUserAddress ? 'map-marker' : 'pencil-box'}
+                      color={Palette.Primary}
+                    />
+                  )}
+                />
+              </Box>
             </List.Section>
             <List.Section>
               <List.Subheader style={{ fontFamily: Font.cairo }}>
                 السيارات
               </List.Subheader>
+              {currentUserCar ? (
+                <Card
+                  style={{
+                    backgroundColor: Palette.White,
+                    borderColor: Palette.Light,
+                    borderWidth: 1,
+                  }}
+                  mode="contained"
+                >
+                  <Card.Content>
+                    <Wrap direction="row" justify="start" items="center">
+                      <MaterialCommunityIcons
+                        name="car"
+                        size={15}
+                        color={Palette.DarkGray}
+                      />
+                      <Text style={{ paddingHorizontal: 2 }} />
 
-              <List.Item
-                titleStyle={{
-                  color: Palette.Primary,
-                  fontFamily: Font.cairo,
-                }}
-                onPress={() => {
-                  goTo('CreateCar');
-                }}
-                title="اضافة سيارة"
-                left={(props) => (
-                  <List.Icon {...props} icon="car" color={Palette.Primary} />
-                )}
-              />
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserCar?.make}
+                      </Text>
+                      <Text style={{ paddingHorizontal: 2 }}>-</Text>
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserCar?.model}
+                      </Text>
+                      <Text style={{ paddingHorizontal: 2 }}>-</Text>
+                      <Text
+                        variant="bodyMedium"
+                        style={{
+                          fontFamily: Font.cairo,
+                          color: Palette.DarkGray,
+                        }}
+                      >
+                        {currentUserCar?.year}
+                      </Text>
+                    </Wrap>
+                  </Card.Content>
+                </Card>
+              ) : null}
+              <Box>
+                <List.Item
+                  titleStyle={{
+                    color: Palette.Primary,
+                    fontFamily: Font.cairo,
+                  }}
+                  onPress={() => {
+                    goTo('CreateCar');
+                  }}
+                  title={!currentUserCar ? 'اضافة سيارة' : 'تحديث السيارة'}
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon={!currentUserCar ? 'car' : 'pencil-box'}
+                      color={Palette.Primary}
+                    />
+                  )}
+                />
+              </Box>
             </List.Section>
             <List.Section>
               <List.Subheader style={{ fontFamily: Font.cairo }}>
                 الاعدادات
               </List.Subheader>
-              <List.Item
-                titleStyle={{ color: Palette.Primary, fontFamily: Font.cairo }}
-                onPress={() => {
-                  goTo('UpdatePassword');
-                }}
-                title="تحديث رمز المرور"
-                left={(props) => (
-                  <List.Icon
-                    {...props}
-                    icon="lock-reset"
-                    color={Palette.Primary}
-                  />
-                )}
-              />
-              <List.Item
-                titleStyle={{ color: Palette.Error, fontFamily: Font.cairo }}
-                onPress={() => {
-                  firebase.auth().signOut();
-                }}
-                title="تسجيل خروج"
-                left={(props) => (
-                  <List.Icon {...props} icon="logout" color={Palette.Error} />
-                )}
-              />
+              <Box>
+                <List.Item
+                  titleStyle={{
+                    color: Palette.Primary,
+                    fontFamily: Font.cairo,
+                  }}
+                  onPress={() => {
+                    goTo('UpdatePassword');
+                  }}
+                  title="تحديث رمز المرور"
+                  left={(props) => (
+                    <List.Icon
+                      {...props}
+                      icon="lock-reset"
+                      color={Palette.Primary}
+                    />
+                  )}
+                />
+              </Box>
+              <Box>
+                <List.Item
+                  titleStyle={{ color: Palette.Error, fontFamily: Font.cairo }}
+                  onPress={() => {
+                    firebase.auth().signOut();
+                  }}
+                  title="تسجيل خروج"
+                  left={(props) => (
+                    <List.Icon {...props} icon="logout" color={Palette.Error} />
+                  )}
+                />
+              </Box>
             </List.Section>
           </Flex>
         ) : (
