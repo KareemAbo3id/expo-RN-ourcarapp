@@ -1,7 +1,8 @@
 {
   "expo": {
     "name": "our-car",
-    "slug": "our-car",
+    "slug": "ourcarapp",
+    "extra.eas.projectId": "ourcarapp",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
