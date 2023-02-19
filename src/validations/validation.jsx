@@ -120,6 +120,28 @@ const validateForgotPasswordFormSubmit = (email = '') => {
   } else return true;
 };
 
+const validateUpdatePasswordSubmit = (password = '', newpassword = '') => {
+  if (
+    password.toString() !== '' &&
+    password.toString().length > 5 &&
+    newpassword.toString() !== '' &&
+    newpassword.toString().length > 5 &&
+    password.toString() !== newpassword.toString()
+  ) {
+    return false;
+  } else return true;
+};
+
+const validateAddressFormSubmit = (ereg = '', ecit = '', edis = '') => {
+  if (
+    ereg.toString() !== '' &&
+    ecit.toString() !== '' &&
+    edis.toString() !== ''
+  ) {
+    return false;
+  } else return true;
+};
+
 export {
   validateEmailColor,
   validateEmailIcon,
@@ -134,4 +156,6 @@ export {
   validateForgotPasswordFormSubmit,
   validateUpdatePasswordColor,
   validateUpdatePasswordIcon,
+  validateUpdatePasswordSubmit,
+  validateAddressFormSubmit,
 };

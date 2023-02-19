@@ -25,6 +25,7 @@ import {
   validatePasswordIcon,
   validateUpdatePasswordColor,
   validateUpdatePasswordIcon,
+  validateUpdatePasswordSubmit,
 } from '../validations/validation';
 // imports ////////////////////////////////
 
@@ -59,28 +60,14 @@ export default function UpdatePassword() {
           .then(() => {
             setTimeout(() => {
               firebase.auth().signOut();
-            }, 6000);
+            }, 5000);
           })
           .catch(() => alert('حدث خطأ. حاول مرة اخرة'));
       })
       .catch(() => alert('تأكد من صحة رمز المرور'));
   };
 
-  // validate
-  const validateUpdatePasswordSubmit = (password = '', newpassword = '') => {
-    if (
-      password.toString() !== '' &&
-      password.toString().length > 5 &&
-      newpassword.toString() !== '' &&
-      newpassword.toString().length > 5 &&
-      password.toString() !== newpassword.toString()
-    ) {
-      return false;
-    } else return true;
-  };
-
   // local ui:
-
   if (sentUpdateLink) {
     return (
       <KeyboardAvoidingView style={Styles.SAVStyleForAndroid}>

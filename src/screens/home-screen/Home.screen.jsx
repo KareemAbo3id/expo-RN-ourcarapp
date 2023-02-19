@@ -138,7 +138,7 @@ export default function Home() {
                       style={{ color: Palette.White, fontFamily: Font.cairo }}
                       variant="headlineSmall"
                     >
-                      {!currentUserData.name ? '-' : currentUserData.name}
+                      {!currentUserData?.name ? '...' : currentUserData?.name}
                     </Text>
                     <Text
                       style={{
@@ -151,7 +151,7 @@ export default function Home() {
                       }}
                       variant="bodySmall"
                     >
-                      {!currentUserData?.email ? '-' : currentUserData?.email}
+                      {!currentUserData?.email ? '...' : currentUserData?.email}
                     </Text>
                   </Flex>
                 );

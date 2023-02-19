@@ -9,58 +9,57 @@
 /* eslint-disable react-native/no-inline-styles */
 /* eslint-disable react/jsx-wrap-multilines */
 /* eslint-disable no-alert */
-import { Box, Flex, Stack } from '@react-native-material/core';
 import React from 'react';
+import { Box, Flex, Stack } from '@react-native-material/core';
+import { useNavigation } from '@react-navigation/native';
 import { SelectList } from 'react-native-dropdown-select-list';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { KeyboardAvoidingView, StyleSheet } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native';
+import { Avatar, Text, TextInput } from 'react-native-paper';
 import { firebase } from '../../config/firebase';
 import { ContainedButtonCtrl } from '../components/ButtonCtrl.component';
-import { Font } from '../styles/Font.style';
+import { Font, TextRight } from '../styles/Font.style';
 import Palette from '../styles/Colors.style';
+import cit from '../../data/cit';
+import reg from '../../data/reg';
+import InputCtrl from '../components/InputCtrl.component';
+import { validateAddressFormSubmit } from '../validations/validation';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
 export default function CreateAddress() {
   // local hooks =============:
-  const { currentUser } = firebase.auth();
-  const { credential } = firebase.auth.EmailAuthProvider;
+  const Navigation = useNavigation();
+  const goTo = (path) => Navigation.navigate(path);
 
-  const [isLoading, setLoading] = React.useState(true);
-  const [regions, setRegions] = React.useState();
-  const [cities, setCities] = React.useState();
-  const [districts, setDistricts] = React.useState();
+  const [localReg, setLocalReg] = React.useState('');
+  const [loaclCity, setLocalCity] = React.useState('');
+  const [localDis, setLocalDis] = React.useState('');
 
-  React.useEffect(() => {
-    fetch(
-      'https://raw.githubusercontent.com/homaily/Saudi-Arabia-Regions-Cities-and-Districts/master/json/regions_lite.json'
-    )
-      .then((response) => response.json())
-      .then((json) => setRegions(json.map()))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-    fetch(
-      'https://raw.githubusercontent.com/homaily/Saudi-Arabia-Regions-Cities-and-Districts/master/json/cities_lite.json'
-    )
-      .then((response) => response.json())
-      .then((json) => setCities(json))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-    fetch(
-      'https://raw.githubusercontent.com/homaily/Saudi-Arabia-Regions-Cities-and-Districts/master/json/districts_lite.json'
-    )
-      .then((response) => response.json())
-      .then((json) => setDistricts(json))
-      .catch((error) => console.error(error))
-      .finally(() => setLoading(false));
-  }, []);
-
-  const [regionsSelect, setRegionsSelect] = React.useState('');
-  const [citiesSelect, setCitiesSelect] = React.useState('');
-  const [districtsSelect, setDistrictsSelect] = React.useState('');
+  const [sentUpdateData, setSentUpdateData] = React.useState(false);
 
   // local handlers =============:
+  const userCreateAddress = async (userReg, userCity, userDis) => {
+    await firebase
+      .firestore()
+      .collection('users')
+      .doc(firebase.auth().currentUser.uid)
+      .update({
+        userAddress: {
+          reg: userReg,
+          city: userCity,
+          dis: userDis,
+        },
+      })
+      .then(() => {
+        setSentUpdateData(true);
+        Keyboard.dismiss();
+        setTimeout(() => {
+          goTo('ProfileRoot');
+        }, 3000);
+      })
+      .catch(() => alert('حدث خطأ. حاول مرة اخرة'));
+  };
 
   // local ui =============:
   const ListPlaceholder = ({ text }) => {
@@ -87,49 +86,102 @@ export default function CreateAddress() {
     );
   };
 
+  if (sentUpdateData) {
+    return (
+      <KeyboardAvoidingView style={Styles.SAVStyleForAndroid}>
+        <Flex
+          direction="column"
+          justify="center"
+          items="center"
+          pb={10}
+          spacing={5}
+        >
+          <Avatar.Icon
+            size={70}
+            icon="check-circle-outline"
+            color={Palette.Primary}
+            style={{ backgroundColor: 'transparent' }}
+          />
+          <Text
+            variant="headlineSmall"
+            style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+          >
+            تم تحديث العنوان
+          </Text>
+        </Flex>
+      </KeyboardAvoidingView>
+    );
+  }
+
   return (
     <KeyboardAvoidingView style={Styles.SAVStyleForAndroid}>
       <Stack spacing={5}>
-        <Text>{category}</Text>
-        <Text>{subCategory}</Text>
         <Box>
           <SelectList
             // SelectList Logic:
-            setSelected={setCategory}
-            data={citiesList}
+            setSelected={setLocalReg}
+            data={reg}
             // SelectList Style:
             fontFamily={Font.cairo}
             search={false}
-            dropdownStyles={ListStyles.dropdownStyles}
+            dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 22 }]}
             boxStyles={ListStyles.boxStyles}
             inputStyles={ListStyles.inputStyles}
             dropdownTextStyles={ListStyles.dropdownTextStyles}
-            placeholder={<ListPlaceholder text="المنطقة / المدينة" />}
+            placeholder={<ListPlaceholder text="المنطقة" />}
             arrowicon={<MaterialCommunityIcons name="menu-down" size={30} />}
           />
         </Box>
-        {category && (
+        {localReg && (
           <Box>
             <SelectList
               // SelectList Logic:
-              setSelected={setSubCategory}
-              data={districtsList[category]}
+              setSelected={setLocalCity}
+              data={cit[localReg]}
               // SelectList Style:
               fontFamily={Font.cairo}
-              dropdownShown={false}
               search={false}
-              dropdownStyles={ListStyles.dropdownStyles}
+              dropdownShown={false}
+              dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 20 }]}
               boxStyles={ListStyles.boxStyles}
               inputStyles={ListStyles.inputStyles}
               dropdownTextStyles={ListStyles.dropdownTextStyles}
-              placeholder={<ListPlaceholder text="الحي" />}
+              placeholder={<ListPlaceholder text="المدينة" />}
               arrowicon={<MaterialCommunityIcons name="menu-down" size={30} />}
+            />
+          </Box>
+        )}
+        {loaclCity && (
+          <Box>
+            <InputCtrl
+              start={
+                localDis.toLowerCase().length < 1 ? (
+                  <TextInput.Icon
+                    icon="map-marker"
+                    size={20}
+                    iconColor={Palette.Primary}
+                  />
+                ) : null
+              }
+              contentStyle={{ fontFamily: Font.cairo, textAlign: TextRight }}
+              keyboardType="default"
+              textContentType="addressCity"
+              placeholder="الحي"
+              value={localDis}
+              onChangeText={(text) => setLocalDis(text)}
+              activeOutlineColor={Palette.Primary}
             />
           </Box>
         )}
         {/* UPDATE BUTTON ================================ */}
         <Box>
-          <ContainedButtonCtrl title="تحديث" onPress={() => {}} />
+          <ContainedButtonCtrl
+            title="حفظ العنوان"
+            disabled={validateAddressFormSubmit(localReg, loaclCity, localDis)}
+            onPress={() => {
+              userCreateAddress(localReg, loaclCity, localDis);
+            }}
+          />
         </Box>
       </Stack>
     </KeyboardAvoidingView>
@@ -143,7 +195,6 @@ const ListStyles = {
     backgroundColor: Palette.White,
     elevation: 2,
     position: 'absolute',
-    zIndex: 22,
     marginTop: 55,
     width: '100%',
     borderRadius: 4,

@@ -188,8 +188,8 @@ export default function Signup() {
                   />
                 }
                 contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
-                keyboardType="email-address"
-                textContentType="emailAddress"
+                keyboardType="default"
+                textContentType="name"
                 placeholder="full name الاسم بالكامل"
                 value={localName}
                 onChangeText={(text) => setLocalName(text)}

@@ -5,6 +5,7 @@ import { I18nManager } from 'react-native';
 import { Font } from '../../../styles/Font.style';
 
 // screens
+// eslint-disable-next-line import/no-named-as-default
 import ProfileRoot from './ProfileRoot';
 import CreateAddress from '../../../controllers/CreateAddress.control';
 import CreateCar from '../../../controllers/CreateCar.control';
@@ -23,7 +24,7 @@ export default function ProfileNav() {
       id: 1,
       name: 'CreateAddress',
       component: CreateAddress,
-      title: 'اضافة عنوان',
+      title: 'تحديث العنوان',
     },
     {
       id: 2,
@@ -66,49 +67,6 @@ export default function ProfileNav() {
             />
           );
         })}
-        {/* <Stack.Screen
-          getId={}
-          name="CreateAddress"
-          component={CreateAddress}
-          options={{
-            headerTitle: 'اضافة عنوان',
-            animation: 'slide_from_bottom',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: Font.cairo,
-              fontSize: 18,
-            },
-            headerTransparent: true,
-          }}
-        />
-        <Stack.Screen
-          name="CreateCar"
-          component={CreateCar}
-          options={{
-            headerTitle: 'اضافة سيارة',
-            animation: 'slide_from_bottom',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: Font.cairo,
-              fontSize: 18,
-            },
-            headerTransparent: true,
-          }}
-        />
-        <Stack.Screen
-          name="UpdatePassword"
-          component={UpdatePassword}
-          options={{
-            headerTitle: 'تحديث رمز المرور',
-            animation: 'slide_from_bottom',
-            headerTitleAlign: 'center',
-            headerTitleStyle: {
-              fontFamily: Font.cairo,
-              fontSize: 18,
-            },
-            headerTransparent: true,
-          }}
-        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
