@@ -5,6 +5,7 @@ import React from 'react';
 import { View, StyleSheet, StatusBar, I18nManager } from 'react-native';
 import { Button, Dialog, Portal, Provider, Text } from 'react-native-paper';
 import Palette from '../styles/Colors.style';
+import { Font } from '../styles/Font.style';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
@@ -35,7 +36,7 @@ export default function DialogCtrl({
           >
             <Flex justify="center" items="center" direction="column">
               <Dialog.Content>
-                <Text variant="bodyLarge" style={Styles.cairoFont}>
+                <Text variant="bodyLarge" style={Styles.mediumFont}>
                   {content}
                 </Text>
               </Dialog.Content>
@@ -43,7 +44,7 @@ export default function DialogCtrl({
                 <Dialog.Actions>
                   <Button
                     mode="text"
-                    labelStyle={Styles.cairoFont}
+                    labelStyle={Styles.mediumFont}
                     textColor={Palette.Primary}
                     style={Styles.radius}
                     onPress={actionButtonOnPress}
@@ -61,6 +62,6 @@ export default function DialogCtrl({
 }
 
 const Styles = StyleSheet.create({
-  cairoFont: { fontFamily: 'cairo', lineHeight: 25 },
+  mediumFont: { fontFamily: Font.tajawalMedium, lineHeight: 25 },
   radius: { borderRadius: 4 },
 });

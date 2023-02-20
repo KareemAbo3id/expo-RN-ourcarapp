@@ -2,6 +2,7 @@
 import React from 'react';
 import { Flex } from '@react-native-material/core';
 import { Text } from 'react-native-paper';
+import { Font } from '../styles/Font.style';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
@@ -13,7 +14,11 @@ export default function ScreenTitle({ title }) {
     <Flex items="center" justify="center">
       <Text
         variant="headlineSmall"
-        style={{ fontFamily: 'cairo', lineHeight: 50, textAlign: 'center' }}
+        style={{
+          fontFamily: Font.tajawalMedium,
+          lineHeight: 50,
+          textAlign: 'center',
+        }}
       >
         {title}
       </Text>

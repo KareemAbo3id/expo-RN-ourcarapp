@@ -67,7 +67,7 @@ export default function CreateAddress() {
       <Flex direction="row" justify="center" items="center">
         <Text
           style={{
-            fontFamily: Font.cairo,
+            fontFamily: Font.tajawalMedium,
             color: Palette.Secondary,
             fontSize: 16,
           }}
@@ -104,7 +104,7 @@ export default function CreateAddress() {
           />
           <Text
             variant="headlineSmall"
-            style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+            style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
           >
             تم تحديث العنوان
           </Text>
@@ -122,7 +122,7 @@ export default function CreateAddress() {
             setSelected={setLocalReg}
             data={reg}
             // SelectList Style:
-            fontFamily={Font.cairo}
+            fontFamily={Font.tajawalMedium}
             search={false}
             dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 22 }]}
             boxStyles={ListStyles.boxStyles}
@@ -139,7 +139,7 @@ export default function CreateAddress() {
               setSelected={setLocalCity}
               data={cit[localReg]}
               // SelectList Style:
-              fontFamily={Font.cairo}
+              fontFamily={Font.tajawalMedium}
               search={false}
               dropdownShown={false}
               dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 20 }]}
@@ -163,7 +163,10 @@ export default function CreateAddress() {
                   />
                 ) : null
               }
-              contentStyle={{ fontFamily: Font.cairo, textAlign: TextRight }}
+              contentStyle={{
+                fontFamily: Font.tajawalMedium,
+                textAlign: TextRight,
+              }}
               keyboardType="default"
               textContentType="addressCity"
               placeholder="الحي"

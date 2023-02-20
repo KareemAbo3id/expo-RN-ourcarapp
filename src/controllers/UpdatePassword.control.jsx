@@ -86,7 +86,7 @@ export default function UpdatePassword() {
           />
           <Text
             variant="headlineSmall"
-            style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+            style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
           >
             تم تحديث رمز المرور
           </Text>
@@ -94,7 +94,7 @@ export default function UpdatePassword() {
         <Wrap justify="center" items="center" pb={10} spacing={5}>
           <Text
             variant="bodyLarge"
-            style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+            style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
           >
             جاري تسجيل الخروج
           </Text>
@@ -108,13 +108,13 @@ export default function UpdatePassword() {
     <KeyboardAvoidingView style={Styles.SAVStyleForAndroid}>
       <Text
         variant="bodyLarge"
-        style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+        style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
       >
         بعد تحديث الرمز سيتم تسجيل الخروج تلقائياً.
       </Text>
       <Text
         variant="bodyLarge"
-        style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+        style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
       >
         الرجاء معاودة الدخول
       </Text>
@@ -129,7 +129,10 @@ export default function UpdatePassword() {
                 iconColor={validatePasswordColor(localPassword)}
               />
             }
-            contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+            contentStyle={{
+              fontFamily: Font.tajawalMedium,
+              textAlign: TextLeft,
+            }}
             keyboardType="default"
             textContentType="password"
             placeholder="password رمز المرور الحالي"
@@ -156,7 +159,10 @@ export default function UpdatePassword() {
                 iconColor={validateUpdatePasswordColor(newPassword)}
               />
             }
-            contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+            contentStyle={{
+              fontFamily: Font.tajawalMedium,
+              textAlign: TextLeft,
+            }}
             keyboardType="default"
             textContentType="password"
             placeholder="password رمز المرور الجديد"

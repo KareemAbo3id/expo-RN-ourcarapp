@@ -18,7 +18,7 @@ export default function Version() {
       style={{
         color: Palette.Secondary,
         textAlign: 'center',
-        fontFamily: Font.cairo,
+        fontFamily: Font.tajawalMedium,
       }}
     >
       نسخة تجريبية V1.0.0

@@ -3,6 +3,7 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import { TextInput } from 'react-native-paper';
 import Palette from '../styles/Colors.style';
+import { Font } from '../styles/Font.style';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
@@ -42,13 +43,13 @@ export default function InputCtrl({
       placeholderTextColor={Palette.Secondary}
       outlineColor={Palette.Primary}
       contentStyle={contentStyle}
-      style={(Styles.cairoFont, { backgroundColor: Palette.White })}
+      style={(Styles.tajawal, { backgroundColor: Palette.White })}
     />
   );
 }
 
 const Styles = StyleSheet.create({
-  cairoFont: {
-    fontFamily: 'cairo',
+  tajawal: {
+    fontFamily: Font.tajawalMedium,
   },
 });

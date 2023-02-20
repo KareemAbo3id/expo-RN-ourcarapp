@@ -4,6 +4,7 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
 import { Button } from 'react-native-paper';
+import { Font } from '../styles/Font.style';
 import Palette from '../styles/Colors.style';
 // imports ////////////////////////////////
 
@@ -22,7 +23,7 @@ function TextButtonCtrl({ icon, title, onPress, disabled, compact }) {
       mode="text"
       textColor={Palette.Primary}
       style={Styles.radius}
-      labelStyle={Styles.cairoFont}
+      labelStyle={Styles.mediumFont}
       uppercase={false}
     >
       {title}
@@ -44,7 +45,7 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled, compact }) {
       mode="contained"
       buttonColor={Palette.Primary}
       style={Styles.radius}
-      labelStyle={Styles.cairoFont}
+      labelStyle={Styles.mediumFont}
       uppercase={false}
     >
       {title}
@@ -53,7 +54,7 @@ function ContainedButtonCtrl({ icon, title, onPress, disabled, compact }) {
 }
 
 const Styles = StyleSheet.create({
-  cairoFont: { fontFamily: 'cairo', lineHeight: 25 },
+  mediumFont: { fontFamily: Font.tajawalMedium, lineHeight: 25 },
   radius: { borderRadius: 4 },
 });
 

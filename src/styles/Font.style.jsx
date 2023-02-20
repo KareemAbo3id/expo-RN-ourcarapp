@@ -1,4 +1,8 @@
-const Font = { cairo: 'cairo' };
+const Font = {
+  tajawalBold: 'bold',
+  tajawalMedium: 'medium',
+  tajawalLight: 'light',
+};
 const TextRight = 'right';
 const TextLeft = 'left';
 

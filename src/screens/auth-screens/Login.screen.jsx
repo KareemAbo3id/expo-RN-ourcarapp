@@ -73,7 +73,9 @@ export default function Login() {
 
   // font hook =============:
   const [fontsLoaded] = useFonts({
-    cairo: require('./../../assets/fonts/Cairo-Regular.ttf'),
+    bold: require('./../../assets/fonts/Tajawal-Bold.ttf'),
+    medium: require('./../../assets/fonts/Tajawal-Medium.ttf'),
+    light: require('./../../assets/fonts/Tajawal-Light.ttf'),
   });
   const onLayoutRootView = React.useCallback(async () => {
     if (fontsLoaded) await SplashScreen.hideAsync();
@@ -129,7 +131,10 @@ export default function Login() {
                     iconColor={validateEmailColor(localEmail)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 placeholder="e-mail البريد الالكتروني"
@@ -148,7 +153,10 @@ export default function Login() {
                     iconColor={validatePasswordColor(localPassword)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 keyboardType="default"
                 textContentType="password"
                 placeholder="password رمز المرور"
@@ -185,7 +193,9 @@ export default function Login() {
             </Flex>
             <Flex items="center" justify="center" direction="row">
               {/* NAV BUTTON ================================ */}
-              <Text style={{ fontFamily: Font.cairo }}>ليس لديك حساب؟</Text>
+              <Text style={{ fontFamily: Font.tajawalMedium }}>
+                ليس لديك حساب؟
+              </Text>
               <TextButtonCtrl
                 compact
                 title="سجل الان"

@@ -67,7 +67,7 @@ export default function CreateCar() {
       <Flex direction="row" justify="center" items="center">
         <Text
           style={{
-            fontFamily: Font.cairo,
+            fontFamily: Font.tajawalMedium,
             color: Palette.Secondary,
             fontSize: 16,
           }}
@@ -104,7 +104,7 @@ export default function CreateCar() {
           />
           <Text
             variant="headlineSmall"
-            style={{ fontFamily: Font.cairo, textAlign: 'center' }}
+            style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
           >
             تم تحديث بيانات السيارة
           </Text>
@@ -122,7 +122,7 @@ export default function CreateCar() {
             setSelected={setLocalMake}
             data={carMake}
             // SelectList Style:
-            fontFamily={Font.cairo}
+            fontFamily={Font.tajawalMedium}
             search={false}
             dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 22 }]}
             boxStyles={ListStyles.boxStyles}
@@ -139,7 +139,7 @@ export default function CreateCar() {
               setSelected={setLocalModel}
               data={carModel[localMake]}
               // SelectList Style:
-              fontFamily={Font.cairo}
+              fontFamily={Font.tajawalMedium}
               search={false}
               dropdownShown={false}
               dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 20 }]}
@@ -158,7 +158,7 @@ export default function CreateCar() {
               setSelected={setLocalYear}
               data={carYear}
               // SelectList Style:
-              fontFamily={Font.cairo}
+              fontFamily={Font.tajawalMedium}
               search={false}
               dropdownShown={false}
               dropdownStyles={[ListStyles.dropdownStyles, { zIndex: 20 }]}

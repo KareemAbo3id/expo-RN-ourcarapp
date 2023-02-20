@@ -94,7 +94,9 @@ export default function Signup() {
 
   // font hook =============:
   const [fontsLoaded] = useFonts({
-    cairo: require('./../../assets/fonts/Cairo-Regular.ttf'),
+    bold: require('./../../assets/fonts/Tajawal-Bold.ttf'),
+    medium: require('./../../assets/fonts/Tajawal-Medium.ttf'),
+    light: require('./../../assets/fonts/Tajawal-Light.ttf'),
   });
   const onLayoutRootView = React.useCallback(async () => {
     if (fontsLoaded) await SplashScreen.hideAsync();
@@ -187,7 +189,10 @@ export default function Signup() {
                     iconColor={validateNameColor(localName)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 keyboardType="default"
                 textContentType="name"
                 placeholder="full name الاسم بالكامل"
@@ -206,7 +211,10 @@ export default function Signup() {
                     iconColor={validateEmailColor(localEmail)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 placeholder="e-mail البريد الالكتروني"
@@ -225,7 +233,10 @@ export default function Signup() {
                     iconColor={validatePasswordColor(localPassword)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 textContentType="password"
                 placeholder="password رمز المرور"
                 secureTextEntry={!showPassword}
@@ -254,7 +265,10 @@ export default function Signup() {
                     )}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 textContentType="password"
                 placeholder="confirm password تأكيد الرمز"
                 secureTextEntry={!showConPassword}
@@ -286,7 +300,7 @@ export default function Signup() {
                 onPress={() => {
                   setTOUChecked(!TOUchecked);
                 }}
-                style={{ marginRight: -5, fontFamily: Font.cairo }}
+                style={{ marginRight: -5, fontFamily: Font.tajawalMedium }}
               >
                 أوافق على
               </Text>
@@ -295,7 +309,7 @@ export default function Signup() {
                 compact
                 mode="text"
                 labelStyle={{
-                  fontFamily: Font.cairo,
+                  fontFamily: Font.tajawalMedium,
                   lineHeight: 30,
                 }}
                 onPress={_handlePressButtonAsync}
@@ -321,7 +335,7 @@ export default function Signup() {
             </Box>
             <Flex items="center" justify="center" direction="row">
               {/* NAV BUTTON ================================ */}
-              <Text style={{ fontFamily: Font.cairo }}>لديك حساب؟</Text>
+              <Text style={{ fontFamily: Font.tajawalMedium }}>لديك حساب؟</Text>
               <TextButtonCtrl
                 compact
                 title="سجل دخولك"

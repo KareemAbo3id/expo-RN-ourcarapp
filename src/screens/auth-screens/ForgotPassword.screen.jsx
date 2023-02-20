@@ -53,7 +53,9 @@ export default function ForgotPassword() {
 
   // font hook =============:
   const [fontsLoaded] = useFonts({
-    cairo: require('./../../assets/fonts/Cairo-Regular.ttf'),
+    bold: require('./../../assets/fonts/Tajawal-Bold.ttf'),
+    medium: require('./../../assets/fonts/Tajawal-Medium.ttf'),
+    light: require('./../../assets/fonts/Tajawal-Light.ttf'),
   });
   const onLayoutRootView = React.useCallback(async () => {
     if (fontsLoaded) await SplashScreen.hideAsync();
@@ -82,7 +84,10 @@ export default function ForgotPassword() {
           <LogoAvatar size={80} />
           <ScreenTitle title="نسيت رمز المرور" />
           <Wrap justify="center" items="center" pv={15}>
-            <Text style={{ fontFamily: Font.cairo }} variant="bodyMedium">
+            <Text
+              style={{ fontFamily: Font.tajawalMedium }}
+              variant="bodyMedium"
+            >
               ادخل بريدك الالكتروني لارسال ايميل تهيئة رمز المرور
             </Text>
           </Wrap>
@@ -98,7 +103,10 @@ export default function ForgotPassword() {
                     iconColor={validateEmailColor(localEmail)}
                   />
                 }
-                contentStyle={{ fontFamily: Font.cairo, textAlign: TextLeft }}
+                contentStyle={{
+                  fontFamily: Font.tajawalMedium,
+                  textAlign: TextLeft,
+                }}
                 keyboardType="email-address"
                 textContentType="emailAddress"
                 placeholder="e-mail البريد الالكتروني"
@@ -132,10 +140,16 @@ export default function ForgotPassword() {
         <KeyboardAvoidingView>
           <LogoAvatar />
           <Wrap justify="center" items="center" direction="column" pv={15}>
-            <Text style={{ fontFamily: Font.cairo }} variant="bodyMedium">
+            <Text
+              style={{ fontFamily: Font.tajawalMedium }}
+              variant="bodyMedium"
+            >
               تم ارسال رابط تهيئة رمز المرور الى بريدك الالكتروني
             </Text>
-            <Text style={{ fontFamily: Font.cairo }} variant="bodyMedium">
+            <Text
+              style={{ fontFamily: Font.tajawalMedium }}
+              variant="bodyMedium"
+            >
               {localEmail}
             </Text>
           </Wrap>
