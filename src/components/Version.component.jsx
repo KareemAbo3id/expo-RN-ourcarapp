@@ -16,9 +16,9 @@ export default function Version() {
   return (
     <Text
       style={{
-        color: Palette.Secondary,
+        color: Palette?.Secondary,
         textAlign: 'center',
-        fontFamily: Font.tajawalMedium,
+        fontWeight: Font?.tajawalMedium,
       }}
     >
       نسخة تجريبية V1.0.0

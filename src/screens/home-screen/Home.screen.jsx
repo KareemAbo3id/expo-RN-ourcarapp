@@ -18,6 +18,8 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Box, Flex } from '@react-native-material/core';
 import { Avatar, Text } from 'react-native-paper';
+import { useFonts } from 'expo-font';
+import * as SplashScreen from 'expo-splash-screen';
 import { firebase } from '../../../config/firebase';
 
 // screens =============:
@@ -37,6 +39,7 @@ const screenNames = {
 };
 // imports ////////////////////////////////
 
+SplashScreen.preventAutoHideAsync();
 const Tab = createBottomTabNavigator();
 
 // react function /////////////////////////
@@ -45,6 +48,16 @@ export default function Home() {
   const { currentUser } = firebase.auth();
   const isCurrentUserVerified = firebase.auth().currentUser.emailVerified;
   const [currentUserData, setCurrentUserData] = React.useState('');
+
+  // font hook =============:
+  const [fontsLoaded] = useFonts({
+    bold: require('../../assets/fonts/Tajawal-Bold.ttf'),
+    medium: require('../../assets/fonts/Tajawal-Medium.ttf'),
+    light: require('../../assets/fonts/Tajawal-Light.ttf'),
+  });
+  const onLayoutRootView = React.useCallback(async () => {
+    if (fontsLoaded) await SplashScreen.hideAsync();
+  }, [fontsLoaded]);
 
   // Get current user data =============:
   React.useEffect(() => {
@@ -64,7 +77,7 @@ export default function Home() {
 
   // local ui:
   return (
-    <SafeAreaView style={Styles.SAVStyleForAndroid}>
+    <SafeAreaView style={Styles.SAVStyleForAndroid} onLayout={onLayoutRootView}>
       <StatusBar backgroundColor={Palette.DarkPrimary} />
       {isCurrentUserVerified ? (
         <NavigationContainer independent>

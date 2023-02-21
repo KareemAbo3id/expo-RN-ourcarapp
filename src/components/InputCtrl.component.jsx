@@ -50,6 +50,6 @@ export default function InputCtrl({
 
 const Styles = StyleSheet.create({
   tajawal: {
-    fontFamily: Font.tajawalMedium,
+    fontWeight: Font?.tajawalMedium,
   },
 });

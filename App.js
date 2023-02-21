@@ -10,7 +10,7 @@ import Login from './src/screens/auth-screens/Login.screen';
 import Signup from './src/screens/auth-screens/Signup.screen';
 import Home from './src/screens/home-screen/Home.screen';
 import ForgotPassword from './src/screens/auth-screens/ForgotPassword.screen';
-import Intro from './src/screens/auth-screens/Intro.screen';
+import Onboarding from './src/screens/auth-screens/Onboarding.screen';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
@@ -45,10 +45,10 @@ function App() {
   // if user not logged in:
   if (!initUser) {
     return (
-      <Stack.Navigator id={1} initialRouteName="intro">
+      <Stack.Navigator id={1} initialRouteName="onboarding">
         <Stack.Screen
-          name="intro"
-          component={Intro}
+          name="onboarding"
+          component={Onboarding}
           options={{ headerShown: false, animation: 'slide_from_left' }}
         />
         <Stack.Screen

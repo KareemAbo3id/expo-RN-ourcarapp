@@ -30,7 +30,7 @@ export default function TOU() {
       compact
       mode="text"
       labelStyle={{
-        fontFamily: Font.tajawalMedium,
+        fontWeight: Font?.tajawalMedium,
         lineHeight: 30,
       }}
       onPress={_handlePressButtonAsync}

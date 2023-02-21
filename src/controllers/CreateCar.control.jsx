@@ -67,7 +67,7 @@ export default function CreateCar() {
       <Flex direction="row" justify="center" items="center">
         <Text
           style={{
-            fontFamily: Font.tajawalMedium,
+            fontWeight: Font.tajawalMedium,
             color: Palette.Secondary,
             fontSize: 16,
           }}
@@ -104,7 +104,7 @@ export default function CreateCar() {
           />
           <Text
             variant="headlineSmall"
-            style={{ fontFamily: Font.tajawalMedium, textAlign: 'center' }}
+            style={{ fontWeight: Font.tajawalMedium, textAlign: 'center' }}
           >
             تم تحديث بيانات السيارة
           </Text>

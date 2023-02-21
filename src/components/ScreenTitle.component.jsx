@@ -15,7 +15,7 @@ export default function ScreenTitle({ title }) {
       <Text
         variant="headlineSmall"
         style={{
-          fontFamily: Font.tajawalMedium,
+          fontWeight: Font?.tajawalMedium,
           lineHeight: 50,
           textAlign: 'center',
         }}

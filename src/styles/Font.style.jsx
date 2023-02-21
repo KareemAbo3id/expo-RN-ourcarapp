@@ -1,7 +1,8 @@
 const Font = {
-  tajawalBold: 'bold',
-  tajawalMedium: 'medium',
-  tajawalLight: 'light',
+  Tajawal: 'tajawal',
+  Bold: '700',
+  Medium: '500',
+  Light: '300',
 };
 const TextRight = 'right';
 const TextLeft = 'left';

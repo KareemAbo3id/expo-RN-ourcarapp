@@ -30,9 +30,9 @@ const styles = StyleSheet.create({
     borderWidth: 0,
   },
   avatarStyle: {
-    backgroundColor: Palette.Primary,
+    backgroundColor: Palette?.Primary,
     borderRadius: 15,
-    shadowColor: Palette.Black,
+    shadowColor: Palette?.Black,
     shadowOffset: {
       width: 0,
       height: 2,

@@ -62,6 +62,6 @@ export default function DialogCtrl({
 }
 
 const Styles = StyleSheet.create({
-  mediumFont: { fontFamily: Font.tajawalMedium, lineHeight: 25 },
+  mediumFont: { fontWeight: Font?.tajawalMedium, lineHeight: 25 },
   radius: { borderRadius: 4 },
 });
