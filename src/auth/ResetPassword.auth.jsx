@@ -8,7 +8,7 @@ import {
   Dimensions,
   KeyboardAvoidingView,
 } from 'react-native';
-import { firebase } from '../../../config/firebase';
+import { firebase } from '../../firebase/firebase'
 import { Flex, Box } from '@react-native-material/core';
 import { TextInput, Text } from 'react-native-paper';
 import {

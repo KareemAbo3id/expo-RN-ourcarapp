@@ -1,15 +1,16 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { firebase } from '../config/firebase';
+import { firebase } from '../firebase/firebase';
 
 // screens:
-import Onboarding from './screens/auth-screens/Onboarding.screen';
-import Login from './screens/auth-screens/Login.screen';
-import Signup from './screens/auth-screens/Signup.screen';
-import ForgotPassword from './screens/auth-screens/ForgotPassword.screen';
-import Home from './screens/home-screen/Home.screen';
+import Onboard from './start/Onboard.start';
+import Home from './start/Home.start';
+import Login from './auth/Login.auth';
+import Signup from './auth/Signup.auth';
+import ResetPassword from './auth/ResetPassword.auth';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
@@ -38,10 +39,10 @@ function AuthNavigation() {
   // if user not logged in:
   if (!INIT_USER) {
     return (
-      <Stack.Navigator id={1} initialRouteName="onboarding">
+      <Stack.Navigator id={1} initialRouteName="Onboard">
         <Stack.Screen
-          name="onboarding"
-          component={Onboarding}
+          name="Onboard"
+          component={Onboard}
           options={{ headerShown: false, animation: 'slide_from_left' }}
         />
         <Stack.Screen
@@ -55,8 +56,8 @@ function AuthNavigation() {
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
         <Stack.Screen
-          name="forgotPassword"
-          component={ForgotPassword}
+          name="ResetPassword"
+          component={ResetPassword}
           options={{ headerShown: false, animation: 'slide_from_bottom' }}
         />
       </Stack.Navigator>

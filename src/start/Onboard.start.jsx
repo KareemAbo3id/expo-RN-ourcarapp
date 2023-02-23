@@ -12,15 +12,15 @@ import { Box, Flex } from '@react-native-material/core';
 import { Button } from 'react-native-paper';
 
 // others:
-import OnboardingItem from '../../components/OnboardingItem.component';
-import OnboardingPaginator from '../../components/OnboardingPaginator.component';
-import onBoardList from '../../../data/onboardList';
+import OnboardItem from '../components/OnboardItem.component';
+import OnboardIndicator from '../components/OnboardIndicator.component';
+import onBoardList from '../../data/onboardList';
 
 // hooks:
-import useNav from '../../hooks/useNav.hook';
-import KMFont from '../../hooks/useFont.hook';
-import usePalette from '../../hooks/usePalette.hook';
-import useLink from '../../hooks/useLink.hook';
+import useNav from '../hooks/useNav.hook';
+import KMFont from '../hooks/useFont.hook';
+import usePalette from '../hooks/usePalette.hook';
+import useLink from '../hooks/useLink.hook';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
@@ -102,7 +102,7 @@ export default function Onboard() {
       >
         <FlatList
           data={onBoardList}
-          renderItem={({ item }) => <OnboardingItem item={item} />}
+          renderItem={({ item }) => <OnboardItem item={item} />}
           horizontal
           showsHorizontalScrollIndicator={false}
           pagingEnabled
@@ -117,7 +117,7 @@ export default function Onboard() {
           viewabilityConfig={viewConfig}
           ref={slidesRef}
         />
-        <OnboardingPaginator data={onBoardList} scrollX={scrollX} />
+        <OnboardIndicator data={onBoardList} scrollX={scrollX} />
       </Flex>
       <Flex
         direction="column"

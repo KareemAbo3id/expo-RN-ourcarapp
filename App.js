@@ -13,9 +13,9 @@ I18nManager.allowRTL(true);
 // react function /////////////////////////
 export default function App() {
   const [fontsLoaded] = useFonts({
-    'Tajawal-Regular': require('./src/assets/fonts/Tajawal-Regular.ttf'),
-    'Tajawal-Bold': require('./src/assets/fonts/Tajawal-Bold.ttf'),
-    'Tajawal-Medium': require('./src/assets/fonts/Tajawal-Medium.ttf'),
+    'Tajawal-Regular': require('./assets/fonts/Tajawal-Regular.ttf'),
+    'Tajawal-Bold': require('./assets/fonts/Tajawal-Bold.ttf'),
+    'Tajawal-Medium': require('./assets/fonts/Tajawal-Medium.ttf'),
   });
 
   const onLayoutRootView = React.useCallback(async () => {

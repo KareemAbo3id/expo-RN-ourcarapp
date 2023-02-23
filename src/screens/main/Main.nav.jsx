@@ -2,7 +2,7 @@
 import React from 'react';
 import { Text, Platform } from 'react-native';
 import * as Location from 'expo-location';
-import KMFont from '../../../hooks/useFont.hook';
+import KMFont from '../../hooks/useFont.hook';
 // imports ////////////////////////////////
 
 // react function /////////////////////////

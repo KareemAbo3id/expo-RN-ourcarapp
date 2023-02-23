@@ -5,9 +5,9 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 // screens
 import ProfileRoot from './ProfileRoot';
-import CreateAddress from '../../../controllers/CreateAddress.control';
-import CreateCar from '../../../controllers/CreateCar.control';
-import UpdatePassword from '../../../controllers/UpdatePassword.control';
+import UpdateAddress from '../../api/UpdateAddress.api';
+import UpdateCar from '../../api/UpdateCar.api';
+import UpdatePassword from '../../api/UpdatePassword.api';
 
 // hooks:
 import KMFont from '../../../hooks/useFont.hook';
@@ -26,13 +26,13 @@ export default function ProfileNav() {
     {
       id: 1,
       name: 'CreateAddress',
-      component: CreateAddress,
+      component: UpdateAddress,
       title: 'تحديث العنوان',
     },
     {
       id: 2,
       name: 'CreateCar',
-      component: CreateCar,
+      component: UpdateCar,
       title: 'اضافة سيارة',
     },
     {
