@@ -1,5 +1,0 @@
-name:				type:		size:
-splash			png		1284*2778
-icon				png		1024*1024
-adaptive-icon		png		1024*1024
-favicon			png		48*48
