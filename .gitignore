@@ -11,10 +11,12 @@ npm-debug.*
 *.orig.*
 web-build/
 build/
+app.json
 package-lock.json
+google-services.json
+eas.json
 .env
 firebase/
-google-services.json
 
 # macOS
 .DS_Store
