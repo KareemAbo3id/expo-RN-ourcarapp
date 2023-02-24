@@ -3,32 +3,35 @@
 import React from 'react';
 import { StyleSheet, Animated, useWindowDimensions } from 'react-native';
 import { Flex } from '@react-native-material/core';
-import usePalette from '../hooks/usePalette.hook';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
 export default function OnboardIndicator({ data, scrollX }) {
   // local hooks:
-  const Palette = usePalette();
   const { width } = useWindowDimensions();
 
   // local handlers:
 
   // local ui:
   return (
-    <Flex direction="row-reverse" pv={30}>
+    <Flex direction="row-reverse" pt={50}>
       {data.map((_, i) => {
         const inputRange = [(i - 1) * width, i * width, (i + 1) * width];
         const dotWidth = scrollX.interpolate({
           inputRange,
-          outputRange: [5, 20, 5],
+          outputRange: [12, 35, 12],
+          extrapolate: 'clamp',
+        });
+        const opacity = scrollX.interpolate({
+          inputRange,
+          outputRange: [0.4, 1, 0.4],
           extrapolate: 'clamp',
         });
         return (
           <Animated.View
             style={[
               Styles.dot,
-              { width: dotWidth, backgroundColor: Palette.Warning },
+              { width: dotWidth, opacity },
             ]}
             key={i.toString()}
           />
@@ -39,9 +42,11 @@ export default function OnboardIndicator({ data, scrollX }) {
 }
 
 const Styles = StyleSheet.create({
+  // eslint-disable-next-line react-native/no-color-literals
   dot: {
-    height: 3,
+    height: 2.7,
     borderRadius: 100,
-    marginHorizontal: 10,
+    marginHorizontal: 8,
+    backgroundColor: '#2ebdd3',
   },
 });

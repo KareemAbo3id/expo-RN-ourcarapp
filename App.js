@@ -16,6 +16,7 @@ export default function App() {
     'Tajawal-Regular': require('./assets/fonts/Tajawal-Regular.ttf'),
     'Tajawal-Bold': require('./assets/fonts/Tajawal-Bold.ttf'),
     'Tajawal-Medium': require('./assets/fonts/Tajawal-Medium.ttf'),
+    'Tajawal-Black': require('./assets/fonts/Tajawal-Black.ttf'),
   });
 
   const onLayoutRootView = React.useCallback(async () => {

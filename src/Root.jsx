@@ -1,3 +1,4 @@
+/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';
@@ -48,17 +49,17 @@ function AuthNavigation() {
         <Stack.Screen
           name="login"
           component={Login}
-          options={{ headerShown: false, animation: 'slide_from_bottom' }}
+          options={{ headerShown: false, animation: 'slide_from_left' }}
         />
         <Stack.Screen
           name="signup"
           component={Signup}
-          options={{ headerShown: false, animation: 'slide_from_bottom' }}
+          options={{ headerShown: false, animation: 'slide_from_left' }}
         />
         <Stack.Screen
           name="ResetPassword"
           component={ResetPassword}
-          options={{ headerShown: false, animation: 'slide_from_bottom' }}
+          options={{ headerShown: false, animation: 'slide_from_left' }}
         />
       </Stack.Navigator>
     );
@@ -70,7 +71,7 @@ function AuthNavigation() {
       <Stack.Screen
         name="home"
         component={Home}
-        options={{ headerShown: false, animation: 'flip' }}
+        options={{ headerShown: false, animation: 'simple_push' }}
       />
     </Stack.Navigator>
   );

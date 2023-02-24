@@ -1,3 +1,5 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable react-native/no-inline-styles */
 import React, { useState, useRef } from 'react';
 import {
   StatusBar,
@@ -8,8 +10,7 @@ import {
   SafeAreaView,
   View,
 } from 'react-native';
-import { Box, Flex } from '@react-native-material/core';
-import { Button } from 'react-native-paper';
+import { Flex } from '@react-native-material/core';
 
 // others:
 import OnboardItem from '../components/OnboardItem.component';
@@ -18,9 +19,8 @@ import onBoardList from '../../data/onboardList';
 
 // hooks:
 import useNav from '../hooks/useNav.hook';
-import KMFont from '../hooks/useFont.hook';
 import usePalette from '../hooks/usePalette.hook';
-import useLink from '../hooks/useLink.hook';
+import OnboardNext from '../components/OnboardNext.component';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
@@ -30,16 +30,26 @@ I18nManager.allowRTL(true);
 export default function Onboard() {
   // local hooks =============:
   const go = useNav();
-  const openLink = useLink();
   const Palette = usePalette();
 
   // onboard slides functions: =============:
   const [currentIndex, setCurrentIndex] = useState(0);
+
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
   }).current;
+
+  const scrollTo = () => {
+    if (currentIndex < onBoardList.length - 1) {
+      slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+    } else {
+      go.to('login');
+    }
+  };
+
   const viewConfig = useRef({
     viewAreaCoveragePercentThreshold: 50,
   }).current;
@@ -93,12 +103,12 @@ export default function Onboard() {
           zIndex: -1,
         }}
       />
-
       <Flex
+        h="100%"
+        pv={20}
         direction="column"
-        justify="center"
+        justify="between"
         items="center"
-        style={{ flex: 0.8 }}
       >
         <FlatList
           data={onBoardList}
@@ -117,57 +127,13 @@ export default function Onboard() {
           viewabilityConfig={viewConfig}
           ref={slidesRef}
         />
+        <OnboardNext
+          scrollTo={scrollTo}
+          percentage={(currentIndex + 1) * (100 / onBoardList.length)}
+        />
         <OnboardIndicator data={onBoardList} scrollX={scrollX} />
       </Flex>
-      <Flex
-        direction="column"
-        justify="start"
-        items="stretch"
-        style={{ flex: 0.2 }}
-        ph={25}
-      >
-        <Button
-          mode="elevated"
-          elevation={3}
-          buttonColor={Palette.PrimLight}
-          textColor={Palette.darkBg}
-          style={{ borderRadius: 2000 }}
-          labelStyle={{
-            fontFamily: KMFont.Medium,
-            fontSize: 20,
-            lineHeight: 29,
-          }}
-          onPress={() => {
-            go.to('login');
-          }}
-        >
-          سجل دخولك الان
-        </Button>
-        <Box pv={2} />
-        <Button
-          mode="text"
-          textColor={Palette.PrimLight}
-          style={{ borderRadius: 2000 }}
-          labelStyle={{
-            fontFamily: KMFont.Medium,
-            fontSize: 18,
-            lineHeight: 29,
-          }}
-          onPress={() => go.to('signup')}
-        >
-          مستخدم جديد؟ انشئ حسابك
-        </Button>
-        <Button
-          mode="text"
-          labelStyle={{
-            fontFamily: KMFont.Medium,
-          }}
-          textColor={Palette.PrimLight}
-          onPress={() => openLink('https://kareemabo3id.github.io/ourcar-TOU/')}
-        >
-          سياسة الاستخدام والخصوصية
-        </Button>
-      </Flex>
+
     </SafeAreaView>
   );
 }
@@ -175,6 +141,6 @@ export default function Onboard() {
 // local styles:
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
-    height: '100%',
+    flex: 1
   },
 });

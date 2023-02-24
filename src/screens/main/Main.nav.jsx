@@ -6,7 +6,7 @@ import KMFont from '../../hooks/useFont.hook';
 // imports ////////////////////////////////
 
 // react function /////////////////////////
-export default function EntryNav() {
+export default function MainNav() {
   // local hooks:
 
   // eslint-disable-next-line no-unused-vars

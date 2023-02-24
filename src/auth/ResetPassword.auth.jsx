@@ -4,30 +4,23 @@ import {
   StyleSheet,
   I18nManager,
   SafeAreaView,
-  Image,
-  Dimensions,
   KeyboardAvoidingView,
 } from 'react-native';
-import { firebase } from '../../firebase/firebase'
-import { Flex, Box } from '@react-native-material/core';
-import { TextInput, Text } from 'react-native-paper';
-import {
-  validateEmailColor,
-  validateEmailIcon,
-  validatePasswordColor,
-  validatePasswordIcon,
-} from '../validations/validation';
+import { firebase } from '../../firebase/firebase';
+import { Flex, Stack } from '@react-native-material/core';
+import { Button, TextInput } from 'react-native-paper';
+import { validateEmailColor, validateForgotPasswordFormSubmit } from '../hooks/useValidation.hook';
 
 // hooks:
 import useNav from '../hooks/useNav.hook';
 import KMFont from '../hooks/useFont.hook';
 import usePalette from '../hooks/usePalette.hook';
 import useLink from '../hooks/useLink.hook';
+import TitleAuth from '../components/TitleAuth.component';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
-const { height, width } = Dimensions.get('window');
 
 // react function /////////////////////////
 export default function ResetPassword() {
@@ -38,8 +31,7 @@ export default function ResetPassword() {
 
   // user inputs =============:
   const [localEmail, setLocalEmail] = useState('');
-  const [localPassword, setLocalPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
+  const [updateEmailSent, setUpdateEmailSent] = useState(false);
 
   // forget password handler =============:
   const userResetPassword = () => {
@@ -47,7 +39,7 @@ export default function ResetPassword() {
       .auth()
       .sendPasswordResetEmail(localEmail)
       .then(() => {
-        setScreenVisibale(!screenVisibale);
+        setUpdateEmailSent(true);
       })
       .catch(() => {
         alert('حدث خطأ، حاول مرة اخرى');
@@ -57,189 +49,86 @@ export default function ResetPassword() {
   // local ui =============:
 
   return (
-    <SafeAreaView
-      style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}
-    >
+    <SafeAreaView style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}>
       <StatusBar backgroundColor="transparent" translucent />
-      <KeyboardAvoidingView behavior="padding">
-        {/* WELCOME ========================== */}
-        <Flex items="center" justify="center" pb={15}>
-          <Image
-            source={require('../../assets/images/user.png')}
-            style={Styles.image}
+      {!updateEmailSent ? (
+        <KeyboardAvoidingView role="form" behavior="height">
+          {/* WELCOME ========================== */}
+          <TitleAuth
+            title="نسيت رمز مرورك؟"
+            describe="ادخل بريدك الالكتروني لارسال رابط تهيئة رمز المرور"
+            source={require('../../assets/images/reset-pass.png')}
           />
-          <Text
-            variant="headlineLarge"
-            style={{ fontFamily: KMFont.Bold, color: Palette.PrimLight }}
-          >
-            نسيت رمز المرور
-          </Text>
-        </Flex>
-        {/* WELCOME ========================== */}
-
-        {/* INPUTS ========================== */}
-        <Flex direction="column" justify="center" items="stretch">
-          <Box>
+          {/* WELCOME ========================== */}
+          <Stack direction="column" justify="center" items="stretch">
             <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validateEmailIcon(localEmail)}
-                  size={20}
-                  iconColor={validateEmailColor(localEmail)}
-                />
-              }
               keyboardType="email-address"
               textContentType="emailAddress"
-              placeholder="البريد الالكتروني"
+              placeholder="E-mail Address"
               value={localEmail}
+              onChangeText={(text) => setLocalEmail(text)}
               mode="outlined"
               autoCapitalize="none"
-              activeOutlineColor="transparent"
+              contextMenuHidden
+              cursorColor={validateEmailColor(localEmail)}
+              activeOutlineColor={validateEmailColor(localEmail)}
+              contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+              style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
               placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
+              outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
             />
-          </Box>
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validatePasswordIcon(localPassword)}
-                  size={20}
-                  iconColor={validatePasswordColor(localPassword)}
-                />
-              }
-              left={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-              textContentType="password"
-              placeholder="رمز المرور"
-              secureTextEntry={!showPassword}
-              value={localPassword}
-              onChangeText={(password) => setLocalPassword(password)}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-        </Flex>
-        {/* INPUTS ========================== */}
-
-        <Flex direction="column" justify="center" items="stretch">
-          {/* TERMS USE ========================== */}
-          <Flex direction="row" justify="start" items="center">
-            <Checkbox
-              uncheckedColor={Palette.PrimLight}
-              color={Palette.Info}
-              status={TOUchecked ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-            />
-            <Text
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-              style={{
-                marginRight: -5,
-                fontFamily: KMFont.Medium,
-                color: Palette.PrimLight,
-              }}
-            >
-              أوافق على
-            </Text>
+          </Stack>
+          <Flex direction="row" justify="between" items="center" pv={5}></Flex>
+          <Stack direction="column" justify="center" items="stretch">
             <Button
-              textColor={Palette.Info}
-              compact
-              mode="text"
+              mode="contained"
+              elevation={5}
+              buttonColor={Palette.Info}
+              textColor={Palette.PrimLight}
+              style={{ borderRadius: 1000 }}
               labelStyle={{
-                fontFamily: KMFont.Medium,
-                lineHeight: 30,
-              }}
-              onPress={_handlePressButtonAsync}
-            >
-              سياسة الاستخدام والخصوصية
-            </Button>
-          </Flex>
-          {/* TERMS USE ========================== */}
-          {/* BUTTONS ========================== */}
-          <Flex
-            direction="column"
-            justify="start"
-            items="stretch"
-            style={{ flex: 0.2 }}
-            ph={25}
-          >
-            <Button
-              mode="elevated"
-              elevation={3}
-              buttonColor={Palette.PrimLight}
-              textColor={Palette.darkBg}
-              style={{ borderRadius: 2000 }}
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 20,
+                fontFamily: KMFont.Bold,
+                fontSize: 17,
                 lineHeight: 29,
               }}
-              onPress={() => {
-                userResetPassword();
-              }}
+              disabled={validateForgotPasswordFormSubmit(localEmail)}
+              onPress={() => userResetPassword()}
             >
               ارسال
             </Button>
-            <Box pv={2} />
-            <Button
-              mode="text"
-              textColor={Palette.PrimLight}
-              style={{ borderRadius: 2000 }}
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 18,
-                lineHeight: 29,
-              }}
-              onPress={() => go.to('signup')}
-            >
-              مستخدم جديد؟ انشئ حسابك
-            </Button>
             <Button
               mode="text"
               labelStyle={{
-                fontFamily: KMFont.Medium,
+                fontFamily: KMFont.Regular,
+                color: Palette.SecDark,
+                fontSize: 12,
               }}
-              textColor={Palette.PrimLight}
-              onPress={() =>
-                openLink('https://kareemabo3id.github.io/ourcar-TOU/')
-              }
+              onPress={() => openLink('https://kareemabo3id.github.io/ourcar-TOU/')}
             >
               سياسة الاستخدام والخصوصية
             </Button>
-          </Flex>
-          {/* BUTTONS ========================== */}
+          </Stack>
+        </KeyboardAvoidingView>
+      ) : (
+        <Flex direction="column" items="center" justify="center">
+          <TitleAuth
+            title="تم ارسال رابط تهيئة رمز المرور"
+            source={require('../../assets/images/email-ver.png')}
+          />
+          <Button
+            mode="text"
+            textColor={Palette.Info}
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              fontSize: 15,
+              lineHeight: 29,
+            }}
+            onPress={() => go.to('login')}
+          >
+            رجوع
+          </Button>
         </Flex>
-      </KeyboardAvoidingView>
+      )}
     </SafeAreaView>
   );
 }
@@ -248,19 +137,6 @@ const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 25,
-  },
-  image: {
-    resizeMode: 'contain',
-    width: width / 1.8,
-    height: height * 0.21,
-  },
-  TextInputStyle: {
-    paddingLeft: 10,
-    borderWidth: 0,
-    borderColor: 'transparent',
-  },
-  TextInputContentStyle: {
-    fontSize: 17.5,
+    paddingHorizontal: 22,
   },
 });

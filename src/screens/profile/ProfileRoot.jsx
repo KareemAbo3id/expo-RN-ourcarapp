@@ -3,14 +3,14 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ScrollView, I18nManager, RefreshControl } from 'react-native';
 import { Text, List, Divider, Card } from 'react-native-paper';
 import { Flex, Box, Wrap } from '@react-native-material/core';
-import { firebase } from '../../../../config/firebase';
-import Version from '../../../components/Version.component';
+import { firebase } from '../../../firebase/firebase';
+import Version from '../../components/Version.component';
 
 // hooks:
-import useNav from '../../../hooks/useNav.hook';
-import KMFont from '../../../hooks/useFont.hook';
-import usePalette from '../../../hooks/usePalette.hook';
-import useLink from '../../../hooks/useLink.hook';
+import useNav from '../../hooks/useNav.hook';
+import KMFont from '../../hooks/useFont.hook';
+import usePalette from '../../hooks/usePalette.hook';
+import useLink from '../../hooks/useLink.hook';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);

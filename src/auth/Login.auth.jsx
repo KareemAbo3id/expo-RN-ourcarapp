@@ -4,37 +4,32 @@ import {
   StyleSheet,
   I18nManager,
   SafeAreaView,
-  Image,
-  Dimensions,
   KeyboardAvoidingView,
 } from 'react-native';
-import { firebase } from '../../firebase/firebase'
-import { Flex, Box } from '@react-native-material/core';
-import { TextInput, Text, Checkbox, Button } from 'react-native-paper';
+import { firebase } from '../../firebase/firebase';
+import { Flex, Stack } from '@react-native-material/core';
+import { TextInput, Button, Text, Switch } from 'react-native-paper';
 import {
   validateEmailColor,
-  validateEmailIcon,
   validatePasswordColor,
-  validatePasswordIcon,
-} from '../../validations/validation';
-
+  validateSignInFormSubmit,
+} from '../hooks/useValidation.hook';
 // hooks:
-import useNav from '../../hooks/useNav.hook';
-import KMFont from '../../hooks/useFont.hook';
-import usePalette from '../../hooks/usePalette.hook';
-import useLink from '../../hooks/useLink.hook';
+import useNav from '../hooks/useNav.hook';
+import KMFont from '../hooks/useFont.hook';
+import usePalette from '../hooks/usePalette.hook';
+import useLink from '../hooks/useLink.hook';
+import TitleAuth from '../components/TitleAuth.component';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
-const { height, width } = Dimensions.get('window');
 
 // react function /////////////////////////
 export default function Login() {
   // local hooks =============:
   const go = useNav();
   const openLink = useLink();
-
   const Palette = usePalette();
 
   // user inputs =============:
@@ -45,158 +40,124 @@ export default function Login() {
   // login handler =============:
   const userLogin = async (email, password) => {
     try {
-      await firebase
-        .auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {});
+      await firebase.auth().signInWithEmailAndPassword(email, password);
     } catch (error) {
-      setShowDialog(true);
+      console.log(error);
     }
   };
 
   // local ui =============:
-
   return (
-    <SafeAreaView
-      style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}
-    >
+    <SafeAreaView style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}>
       <StatusBar backgroundColor="transparent" translucent />
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView role="form" behavior="height">
         {/* WELCOME ========================== */}
-        <Flex items="center" justify="center" pb={15}>
-          <Image
-            source={require('../../assets/images/user.png')}
-            style={Styles.image}
+        <TitleAuth
+          title="هلا فيك!"
+          describe="تسجيل الدخول"
+          source={require('../../assets/images/log-in.png')}
+        />
+        {/* WELCOME ========================== */}
+        <Stack direction="column" justify="center" items="stretch">
+          <TextInput
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            placeholder="E-mail Address"
+            value={localEmail}
+            onChangeText={(text) => setLocalEmail(text)}
+            mode="outlined"
+            autoCapitalize="none"
+            contextMenuHidden
+            cursorColor={validateEmailColor(localEmail)}
+            activeOutlineColor={validateEmailColor(localEmail)}
+            contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+            style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+            placeholderTextColor={Palette.SecDark}
+            outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
           />
-          <Text
-            variant="headlineLarge"
-            style={{ fontFamily: KMFont.Bold, color: Palette.PrimLight }}
+          <TextInput
+            textContentType="password"
+            placeholder="Password"
+            secureTextEntry={!showPassword}
+            value={localPassword}
+            onChangeText={(text) => setLocalPassword(text)}
+            mode="outlined"
+            autoCapitalize="none"
+            contextMenuHidden
+            cursorColor={validatePasswordColor(localPassword)}
+            activeOutlineColor={validatePasswordColor(localPassword)}
+            contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+            style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+            placeholderTextColor={Palette.SecDark}
+            outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+          />
+        </Stack>
+        <Flex direction="row" justify="between" items="center" pv={5}>
+          <Button
+            icon={!showPassword ? 'eye' : 'eye-off'}
+            mode="text"
+            compact
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              color: Palette.PrimLight,
+            }}
+            onPress={() => setShowPassword(!showPassword)}
           >
-            هلا فيك!
-          </Text>
+            {!showPassword ? 'اظهار رمز المرور' : 'اخفاء رمز المرور'}
+          </Button>
+          <Button
+            mode="text"
+            compact
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              color: Palette.Info,
+            }}
+            onPress={() => go.to('ResetPassword')}
+          >
+            نسيت رمز المرور؟
+          </Button>
         </Flex>
-        {/* WELCOME ========================== */}
-
-        {/* INPUTS ========================== */}
-        <Flex direction="column" justify="center" items="stretch">
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validateEmailIcon(localEmail)}
-                  size={20}
-                  iconColor={validateEmailColor(localEmail)}
-                />
-              }
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="البريد الالكتروني"
-              value={localEmail}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validatePasswordIcon(localPassword)}
-                  size={20}
-                  iconColor={validatePasswordColor(localPassword)}
-                />
-              }
-              left={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-              textContentType="password"
-              placeholder="رمز المرور"
-              secureTextEntry={!showPassword}
-              value={localPassword}
-              onChangeText={(password) => setLocalPassword(password)}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-        </Flex>
-        {/* INPUTS ========================== */}
-
-        <Flex direction="column" justify="center" items="stretch">
-          {/* BUTTONS ========================== */}
-          <Flex direction="column" justify="start" items="stretch" ph={25}>
-            <Button
-              mode="elevated"
-              elevation={3}
-              buttonColor={Palette.PrimLight}
-              textColor={Palette.darkBg}
-              style={{ borderRadius: 2000 }}
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 20,
-                lineHeight: 29,
-              }}
-              onPress={() => {
-                userLogin();
-              }}
-            >
-              سجل دخولك الان
-            </Button>
-            <Box pv={2} />
-            <Button
-              mode="text"
-              textColor={Palette.PrimLight}
-              style={{ borderRadius: 2000 }}
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 18,
-                lineHeight: 29,
-              }}
-              onPress={() => go.to('signup')}
-            >
-              مستخدم جديد؟ انشئ حسابك
-            </Button>
-            <Button
-              mode="text"
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-              }}
-              textColor={Palette.PrimLight}
-              onPress={() =>
-                openLink('https://kareemabo3id.github.io/ourcar-TOU/')
-              }
-            >
-              سياسة الاستخدام والخصوصية
-            </Button>
-          </Flex>
-          {/* BUTTONS ========================== */}
-        </Flex>
+        <Stack direction="column" justify="center" items="stretch">
+          <Button
+            mode="contained"
+            elevation={5}
+            buttonColor={Palette.Info}
+            textColor={Palette.PrimLight}
+            style={{ borderRadius: 1000 }}
+            labelStyle={{
+              fontFamily: KMFont.Bold,
+              fontSize: 17,
+              lineHeight: 29,
+            }}
+            onPress={() => userLogin(localEmail, localPassword)}
+            disabled={validateSignInFormSubmit(localEmail, localPassword)}
+          >
+            دخول
+          </Button>
+          <Button
+            mode="text"
+            textColor={Palette.Info}
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              fontSize: 15,
+              lineHeight: 29,
+            }}
+            onPress={() => go.to('signup')}
+          >
+            مستخدم جديد؟ انشئ حسابك
+          </Button>
+          <Button
+            mode="text"
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              color: Palette.SecDark,
+              fontSize: 12,
+            }}
+            onPress={() => openLink('https://kareemabo3id.github.io/ourcar-TOU/')}
+          >
+            سياسة الاستخدام والخصوصية
+          </Button>
+        </Stack>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -206,19 +167,6 @@ const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 25,
-  },
-  image: {
-    resizeMode: 'contain',
-    width: width / 1.8,
-    height: height * 0.21,
-  },
-  TextInputStyle: {
-    paddingLeft: 10,
-    borderWidth: 0,
-    borderColor: 'transparent',
-  },
-  TextInputContentStyle: {
-    fontSize: 17.5,
+    paddingHorizontal: 22,
   },
 });

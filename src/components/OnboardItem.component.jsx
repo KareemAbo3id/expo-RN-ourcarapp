@@ -29,15 +29,15 @@ export default function OnboardItem({ item }) {
   // local ui =============:
   return (
     <SafeAreaView style={Styles.SAVStyleForAndroid}>
-      <Flex justify="center" items="center" style={{ flex: 0.6 }}>
+      <Flex justify="center" items="center">
         <Image source={item.image} style={Styles.image} />
       </Flex>
-      <View style={{ flex: 0.3 }}>
+      <View>
         <Text
           variant="displaySmall"
           style={[
             Styles.onboardText,
-            { fontFamily: KMFont.Bold, color: Palette.PrimLight },
+            { fontFamily: KMFont.Black, color: Palette.PrimLight },
           ]}
         >
           {item.title}
@@ -46,7 +46,7 @@ export default function OnboardItem({ item }) {
           variant="titleMedium"
           style={[
             Styles.onboardText2,
-            { fontFamily: KMFont.Medium, color: Palette.PrimLight },
+            { fontFamily: KMFont.Medium, color: Palette.SecLight },
           ]}
         >
           {item.describe}
@@ -61,7 +61,7 @@ const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
     width: width * 1,
-    paddingHorizontal: 15,
+    paddingHorizontal: 10
   },
   image: {
     resizeMode: 'contain',

@@ -10,15 +10,7 @@ const validateEmailColor = (email = '') => {
     return Palette.Primary;
   } else if (EmailValidator.validate(email) && email.toString() !== '') {
     return Palette.Primary;
-  } else return Palette.Error;
-};
-
-const validateEmailIcon = (email = '') => {
-  if (email.toString() === '') {
-    return 'email-outline';
-  } else if (EmailValidator.validate(email) && email.toString() !== '') {
-    return 'email-outline';
-  } else return 'email-alert-outline';
+  } else return Palette.Red;
 };
 
 const validatePasswordColor = (password = '') => {
@@ -27,32 +19,7 @@ const validatePasswordColor = (password = '') => {
     return Palette.Primary;
   } else if (password.toString() !== '' && password.toString().length >= 6) {
     return Palette.Primary;
-  } else return Palette.Error;
-};
-
-const validatePasswordIcon = (password = '') => {
-  if (password.toString() === '') {
-    return 'lock-outline';
-  } else if (password.toString() !== '' && password.toString().length >= 6) {
-    return 'lock-outline';
-  } else return 'lock-alert-outline';
-};
-
-const validateNameColor = (name = '') => {
-  const Palette = usePalette();
-  if (name.toString() === '') {
-    return Palette.Primary;
-  } else if (name.toString() !== '') {
-    return Palette.Primary;
-  } else return Palette.Error;
-};
-
-const validateNameIcon = (name = '') => {
-  if (name.toString() === '') {
-    return 'account-outline';
-  } else if (name.toString() !== '') {
-    return 'account-outline';
-  } else return 'account-alert-outline';
+  } else return Palette.Red;
 };
 
 const validateConPasswordColor = (password1 = '', password2 = '') => {
@@ -61,15 +28,16 @@ const validateConPasswordColor = (password1 = '', password2 = '') => {
     return Palette.Primary;
   } else if (password2 === password1 && password2.toString().length >= 0) {
     return Palette.Primary;
-  } else return Palette.Error;
+  } else return Palette.Red;
 };
 
-const validateConPasswordIcon = (password1 = '', password2 = '') => {
-  if (password2.toString() === '') {
-    return 'lock-check-outline';
-  } else if (password2 === password1 && password2.toString().length >= 0) {
-    return 'lock-check-outline';
-  } else return 'lock-alert-outline';
+const validateNameColor = (name = '') => {
+  const Palette = usePalette();
+  if (name.toString() === '') {
+    return Palette.Primary;
+  } else if (name.toString() !== '') {
+    return Palette.Primary;
+  } else return Palette.Red;
 };
 
 const validateUpdatePasswordColor = (password = '') => {
@@ -78,15 +46,7 @@ const validateUpdatePasswordColor = (password = '') => {
     return Palette.Primary;
   } else if (password.toString() !== '' && password.toString().length >= 6) {
     return Palette.Primary;
-  } else return Palette.Error;
-};
-
-const validateUpdatePasswordIcon = (password = '') => {
-  if (password.toString() === '') {
-    return 'lock-outline';
-  } else if (password.toString() !== '' && password.toString().length >= 6) {
-    return 'lock-outline';
-  } else return 'lock-alert-outline';
+  } else return Palette.Red;
 };
 
 const validateSignInFormSubmit = (email = '', password = '') => {
@@ -101,14 +61,16 @@ const validateSignInFormSubmit = (email = '', password = '') => {
 };
 
 const validateCreateAccFormSubmit = (
-  name = '',
+  fname = '',
+  lname = '',
   email = '',
   password = '',
   conPassword = '',
   TOUchecked = Boolean
 ) => {
   if (
-    name.toString() !== '' &&
+    fname.toString() !== '' &&
+    lname.toString() !== '' &&
     email.toString() !== '' &&
     password.toString() !== '' &&
     password.toString().length >= 6 &&
@@ -138,29 +100,20 @@ const validateUpdatePasswordSubmit = (password = '', newpassword = '') => {
 };
 
 const validateAddressFormSubmit = (ereg = '', ecit = '', edis = '') => {
-  if (
-    ereg.toString() !== '' &&
-    ecit.toString() !== '' &&
-    edis.toString() !== ''
-  ) {
+  if (ereg.toString() !== '' && ecit.toString() !== '' && edis.toString() !== '') {
     return false;
   } else return true;
 };
 
 export {
+  validateNameColor,
   validateEmailColor,
-  validateEmailIcon,
   validatePasswordColor,
-  validatePasswordIcon,
   validateSignInFormSubmit,
   validateCreateAccFormSubmit,
-  validateNameColor,
-  validateNameIcon,
   validateConPasswordColor,
-  validateConPasswordIcon,
   validateForgotPasswordFormSubmit,
   validateUpdatePasswordColor,
-  validateUpdatePasswordIcon,
   validateUpdatePasswordSubmit,
   validateAddressFormSubmit,
 };

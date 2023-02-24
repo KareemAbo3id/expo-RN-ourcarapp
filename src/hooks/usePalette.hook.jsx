@@ -6,10 +6,11 @@ export default function usePalette() {
 
   // bg
   const darkBg = '#263578';
+  const darkerBg = '#212e68';
 
   // dark:
   const PrimDark = '#1a1c1f';
-  const SecDark = '#455560';
+  const SecDark = '#828b92';
 
   // Laigt
   const PrimLight = '#f2f3f5';
@@ -28,6 +29,7 @@ export default function usePalette() {
     Primary,
     SecPrimary,
     darkBg,
+    darkerBg,
     PrimDark,
     SecDark,
     PrimLight,

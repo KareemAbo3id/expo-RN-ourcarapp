@@ -10,7 +10,7 @@ import UpdateCar from '../../api/UpdateCar.api';
 import UpdatePassword from '../../api/UpdatePassword.api';
 
 // hooks:
-import KMFont from '../../../hooks/useFont.hook';
+import KMFont from '../../hooks/useFont.hook';
 // imports ////////////////////////////////
 
 const Stack = createNativeStackNavigator();

@@ -4,34 +4,40 @@ import {
   StyleSheet,
   I18nManager,
   SafeAreaView,
-  Image,
-  Dimensions,
   KeyboardAvoidingView,
+  View,
 } from 'react-native';
-import { firebase } from '../../firebase/firebase'
-import { Flex, Box } from '@react-native-material/core';
-import { Button, Checkbox, Text, TextInput } from 'react-native-paper';
+import { SelectList } from 'react-native-dropdown-select-list';
+import { firebase } from '../../firebase/firebase';
+import { Box, Divider, Flex, Stack } from '@react-native-material/core';
+import { Button, Card, IconButton, Text, TextInput } from 'react-native-paper';
+import carMake from '../../data/carMake';
+import carModel from '../../data/carModel';
+import carYear from '../../data/carYear';
+import cit from '../../data/cit';
+import reg from '../../data/reg';
 import {
-  validateEmailColor,
-  validateEmailIcon,
-  validatePasswordColor,
-  validatePasswordIcon,
   validateNameColor,
-  validateNameIcon,
-  validateConPasswordColor,
-  validateConPasswordIcon,
-} from '../../validations/validation';
-
+  validateEmailColor,
+  validatePasswordColor,
+} from '../hooks/useValidation.hook';
 // hooks:
-import useNav from '../../hooks/useNav.hook';
-import KMFont from '../../hooks/useFont.hook';
-import usePalette from '../../hooks/usePalette.hook';
-import useLink from '../../hooks/useLink.hook';
+import useNav from '../hooks/useNav.hook';
+import KMFont from '../hooks/useFont.hook';
+import usePalette from '../hooks/usePalette.hook';
+import useLink from '../hooks/useLink.hook';
+import TitleAuth from '../components/TitleAuth.component';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import {
+  nextCarValid,
+  nextEmailValid,
+  nextNameValid,
+  nextPassValid,
+} from '../hooks/CheckerSignup.hook';
 // imports ////////////////////////////////
 
 I18nManager.forceRTL(true);
 I18nManager.allowRTL(true);
-const { height, width } = Dimensions.get('window');
 
 // react function /////////////////////////
 export default function Signup() {
@@ -41,16 +47,84 @@ export default function Signup() {
   const Palette = usePalette();
 
   // local hooks =============:
-  const [localName, setLocalName] = useState('');
+  const [localFName, setLocalFName] = useState('');
+  const [localLName, setLocalLName] = useState('');
+
   const [localEmail, setLocalEmail] = useState('');
   const [localPassword, setLocalPassword] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
   const [conPassword, setConPassword] = useState('');
-  const [showConPassword, setShowConPassword] = useState(false);
+
+  const [showPassword, setShowPassword] = useState(false);
+
   const [TOUchecked, setTOUChecked] = useState(false);
 
+  const [localMake, setLocalMake] = useState('');
+  const [loaclModel, setLocalModel] = useState('');
+  const [localYear, setLocalYear] = useState('');
+
+  const [localReg, setLocalReg] = useState('');
+  const [loaclCity, setLocalCity] = useState('');
+  const [localDis, setLocalDis] = useState('');
+
+  // signup steps =============:
+  const [nameStep, setNameStep] = useState(true);
+  const [emailStep, setEmailStep] = useState(false);
+  const [passStep, setpassStep] = useState(false);
+  const [TOUStep, setTOUStep] = useState(false);
+  const [carStep, setCarStep] = useState(false);
+  const [addressStep, setAddressStep] = useState(false);
+
+  const [nameStepIcon, setNameStepIcon] = useState('account');
+  const [emailStepIcon, setEmailStepIcon] = useState('email');
+  const [passStepIcon, setpassStepIcon] = useState('lock');
+  const [TOUStepIcon, setTOUStepIcon] = useState('checkbox-marked');
+  const [carStepIcon, setCarStepIcon] = useState('car');
+  const [addressStepIcon, setAddressStepIcon] = useState('map-marker');
+
+  const [finishAll, setFinishAll] = useState(false);
+
+  // reset sign up info handler =============:
+  const resetSignUpForm = () => {
+    setLocalFName('');
+    setLocalLName('');
+    setLocalEmail('');
+    setLocalPassword('');
+    setConPassword('');
+    setTOUChecked(false);
+    setLocalMake('');
+    setLocalModel('');
+    setLocalYear('');
+    setLocalReg('');
+    setLocalCity('');
+    setLocalDis('');
+    setNameStep(true);
+    setEmailStep(false);
+    setpassStep(false);
+    setTOUStep(false);
+    setCarStep(false);
+    setAddressStep(false);
+    setNameStepIcon('account');
+    setEmailStepIcon('email');
+    setpassStepIcon('lock');
+    setTOUStepIcon('checkbox-marked');
+    setCarStepIcon('car');
+    setAddressStepIcon('map-marker');
+    setFinishAll(false);
+  };
+
   // Creact Account handler =============:
-  const userCreactAccount = async (name, email, password) => {
+  const userCreactAccount = async (
+    fname,
+    lname,
+    email,
+    password,
+    userMake,
+    userModel,
+    userYear,
+    userReg,
+    userCity,
+    userDis
+  ) => {
     await firebase
       .auth()
       .createUserWithEmailAndPassword(email, password)
@@ -59,7 +133,7 @@ export default function Signup() {
           .auth()
           .currentUser.sendEmailVerification({
             handleCodeInApp: true,
-            url: 'https://our-car-app-edf68.firebaseapp.com/',
+            url: 'https://ourcarapp-4330e.firebaseapp.com/',
           })
           .catch(() => {
             alert('خطأ غير معروف، حاول مرة اخرى');
@@ -70,8 +144,21 @@ export default function Signup() {
               .collection('users')
               .doc(firebase.auth().currentUser.uid)
               .set({
-                name,
                 email,
+                fullName: {
+                  fname,
+                  lname,
+                },
+                userCar: {
+                  make: userMake,
+                  model: userModel,
+                  year: userYear,
+                },
+                userAddress: {
+                  reg: userReg,
+                  city: userCity,
+                  dis: userDis,
+                },
               });
           })
           .catch(() => {
@@ -84,257 +171,586 @@ export default function Signup() {
   };
 
   // local ui =============:
-
   return (
-    <SafeAreaView
-      style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}
-    >
+    <SafeAreaView style={[Styles.SAVStyleForAndroid, { backgroundColor: Palette.darkBg }]}>
       <StatusBar backgroundColor="transparent" translucent />
-      <KeyboardAvoidingView behavior="padding">
+      <KeyboardAvoidingView role="form" behavior="height">
         {/* WELCOME ========================== */}
-        <Flex items="center" justify="center" pb={15}>
-          <Image
-            source={require('../../assets/images/user.png')}
-            style={Styles.image}
+        <TitleAuth
+          title="نورتنا!"
+          describe={
+            !finishAll ? 'ادخل البيانات المطلوبة لانشاء حسابك' : 'تأكد من بياناتك ثم اضغط انشاء'
+          }
+          source={require('../../assets/images/sign-up.png')}
+        />
+
+        {/* STEPS ========================== */}
+        <Stack direction="row" justify="between" items="center" ph={10} pb={8}>
+          <MaterialCommunityIcons
+            name={nameStepIcon}
+            color={nameStepIcon === 'account' ? Palette.SecDark : Palette.Info}
+            size={17}
           />
-          <Text
-            variant="headlineLarge"
-            style={{ fontFamily: KMFont.Bold, color: Palette.PrimLight }}
-          >
-            انشئ حسابك
-          </Text>
-        </Flex>
-        {/* WELCOME ========================== */}
+          <MaterialCommunityIcons
+            name={emailStepIcon}
+            color={emailStepIcon === 'email' ? Palette.SecDark : Palette.Info}
+            size={18}
+          />
+          <MaterialCommunityIcons
+            name={passStepIcon}
+            color={passStepIcon === 'lock' ? Palette.SecDark : Palette.Info}
+            size={18}
+          />
+          <MaterialCommunityIcons
+            name={TOUStepIcon}
+            color={TOUStepIcon === 'checkbox-marked' ? Palette.SecDark : Palette.Info}
+            size={18}
+          />
+          <MaterialCommunityIcons
+            name={carStepIcon}
+            color={carStepIcon === 'car' ? Palette.SecDark : Palette.Info}
+            size={18}
+          />
+          <MaterialCommunityIcons
+            name={addressStepIcon}
+            color={addressStepIcon === 'map-marker' ? Palette.SecDark : Palette.Info}
+            size={18}
+          />
+        </Stack>
 
-        {/* INPUTS ========================== */}
-        <Flex direction="column" justify="center" items="stretch">
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validateNameIcon(localName)}
-                  size={20}
-                  iconColor={validateNameColor(localName)}
-                />
-              }
-              keyboardType="default"
-              textContentType="name"
-              placeholder="ادخل اسمك"
-              value={localName}
-              onChangeText={(text) => setLocalName(text)}
-              // styles:
-              mode="outlined"
-              autoCapitalize="words"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validateEmailIcon(localEmail)}
-                  size={20}
-                  iconColor={validateEmailColor(localEmail)}
-                />
-              }
-              keyboardType="email-address"
-              textContentType="emailAddress"
-              placeholder="البريد الالكتروني"
-              value={localEmail}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validatePasswordIcon(localPassword)}
-                  size={20}
-                  iconColor={validatePasswordColor(localPassword)}
-                />
-              }
-              left={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-              textContentType="password"
-              placeholder="رمز المرور"
-              secureTextEntry={!showPassword}
-              value={localPassword}
-              onChangeText={(password) => setLocalPassword(password)}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-          <Box>
-            <TextInput
-              right={
-                <TextInput.Icon
-                  icon={validateConPasswordIcon(conPassword, localPassword)}
-                  size={20}
-                  iconColor={validateConPasswordColor(
-                    conPassword,
-                    localPassword
-                  )}
-                />
-              }
-              left={
-                <TextInput.Icon
-                  onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? 'eye-off-outline' : 'eye-outline'}
-                  size={20}
-                />
-              }
-              textContentType="password"
-              placeholder="تأكيد الرمز"
-              secureTextEntry={!showConPassword}
-              value={conPassword}
-              onChangeText={(password) => setConPassword(password)}
-              mode="outlined"
-              autoCapitalize="none"
-              activeOutlineColor="transparent"
-              placeholderTextColor={Palette.SecDark}
-              cursorColor={Palette.Primary}
-              style={[
-                Styles.TextInputStyle,
-                { backgroundColor: Palette.PrimLight },
-              ]}
-              contentStyle={[
-                Styles.TextInputContentStyle,
-                { fontFamily: KMFont.Regular, color: Palette.PrimDark },
-              ]}
-              outlineStyle={{ borderRadius: 1000 }}
-            />
-          </Box>
-        </Flex>
-        {/* INPUTS ========================== */}
-
-        <Flex direction="column" justify="center" items="stretch">
-          {/* TERMS USE ========================== */}
-          <Flex direction="row" justify="start" items="center">
-            <Checkbox
-              uncheckedColor={Palette.PrimLight}
-              color={Palette.Info}
-              status={TOUchecked ? 'checked' : 'unchecked'}
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-            />
+        {/* STEP TITLE ========================== */}
+        <Stack direction="row" justify="center" items="center" ph={10} pb={8}>
+          {nameStep && (
             <Text
-              onPress={() => {
-                setTOUChecked(!TOUchecked);
-              }}
-              style={{
-                marginRight: -5,
-                fontFamily: KMFont.Medium,
-                color: Palette.PrimLight,
-              }}
+              style={{ textAlign: 'center', fontFamily: KMFont.Regular, color: Palette.SecLight }}
+              variant="bodyLarge"
             >
-              أوافق على
+              ادخل اسمك
             </Text>
-            <Button
-              textColor={Palette.Info}
-              compact
-              mode="text"
-              labelStyle={{
-                fontFamily: KMFont.Medium,
-                lineHeight: 30,
-              }}
-              onPress={() => {
-                openLink('https://kareemabo3id.github.io/ourcar-TOU/');
-              }}
+          )}
+          {emailStep && (
+            <Text
+              style={{ textAlign: 'center', fontFamily: KMFont.Regular, color: Palette.SecLight }}
+              variant="bodyLarge"
             >
-              سياسة الاستخدام والخصوصية
-            </Button>
-          </Flex>
-          {/* TERMS USE ========================== */}
-          {/* BUTTONS ========================== */}
-          <Flex direction="column" justify="start" items="stretch">
+              ادخل بريدك الالكتروني
+            </Text>
+          )}
+          {passStep && (
+            <Text
+              style={{ textAlign: 'center', fontFamily: KMFont.Regular, color: Palette.SecLight }}
+              variant="bodyLarge"
+            >
+              ادخل رمز المرور
+            </Text>
+          )}
+          {carStep && (
+            <Text
+              style={{ textAlign: 'center', fontFamily: KMFont.Regular, color: Palette.SecLight }}
+              variant="bodyLarge"
+            >
+              ادخل بيانات سيارتك
+            </Text>
+          )}
+          {addressStep && (
+            <Text
+              style={{ textAlign: 'center', fontFamily: KMFont.Regular, color: Palette.SecLight }}
+              variant="bodyLarge"
+            >
+              ادخل عنوانك
+            </Text>
+          )}
+        </Stack>
+
+        {/* FORM ========================== */}
+        <Stack direction="column" justify="center" items="stretch">
+          {nameStep && (
+            <View>
+              {/* First Name */}
+              <TextInput
+                keyboardType="default"
+                textContentType="none"
+                placeholder="First Name"
+                value={localFName}
+                onChangeText={(name) => setLocalFName(name)}
+                mode="outlined"
+                contextMenuHidden
+                cursorColor={validateNameColor(localFName)}
+                activeOutlineColor={validateNameColor(localFName)}
+                contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                placeholderTextColor={Palette.SecDark}
+                outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+              />
+              {/* Last Name */}
+              <TextInput
+                keyboardType="default"
+                textContentType="none"
+                placeholder="Last Name"
+                value={localLName}
+                onChangeText={(name) => setLocalLName(name)}
+                mode="outlined"
+                contextMenuHidden
+                cursorColor={validateNameColor(localLName)}
+                activeOutlineColor={validateNameColor(localLName)}
+                contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                placeholderTextColor={Palette.SecDark}
+                outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+              />
+              {/* NEXT NAME */}
+              <Button
+                mode="contained"
+                elevation={5}
+                buttonColor={Palette.Info}
+                textColor={Palette.PrimLight}
+                style={{ borderRadius: 1000, marginTop: 10 }}
+                labelStyle={{
+                  fontFamily: KMFont.Bold,
+                  fontSize: 17,
+                  lineHeight: 29,
+                }}
+                disabled={nextNameValid(localFName, localLName)}
+                onPress={() => {
+                  setNameStep(false);
+                  setEmailStep(true);
+                  setNameStepIcon('check-decagram');
+                }}
+              >
+                التالي
+              </Button>
+            </View>
+          )}
+          {/* Email */}
+          {emailStep && (
+            <View>
+              <TextInput
+                keyboardType="email-address"
+                textContentType="none"
+                placeholder="New E-mail Address"
+                value={localEmail}
+                onChangeText={(text) => setLocalEmail(text)}
+                mode="outlined"
+                autoCapitalize="none"
+                contextMenuHidden
+                cursorColor={validateEmailColor(localEmail)}
+                activeOutlineColor={validateEmailColor(localEmail)}
+                contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                placeholderTextColor={Palette.SecDark}
+                outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+              />
+              {/* NEXT EMAIL */}
+              <Button
+                mode="contained"
+                elevation={5}
+                buttonColor={Palette.Info}
+                textColor={Palette.PrimLight}
+                style={{ borderRadius: 1000, marginTop: 10 }}
+                labelStyle={{
+                  fontFamily: KMFont.Bold,
+                  fontSize: 17,
+                  lineHeight: 29,
+                }}
+                disabled={nextEmailValid(localEmail)}
+                onPress={() => {
+                  setEmailStep(false);
+                  setpassStep(true);
+                  setEmailStepIcon('check-decagram');
+                }}
+              >
+                التالي
+              </Button>
+            </View>
+          )}
+          {passStep && (
+            <View>
+              {/* Password */}
+              <TextInput
+                textContentType="password"
+                placeholder="New Password"
+                secureTextEntry={!showPassword}
+                value={localPassword}
+                onChangeText={(text) => setLocalPassword(text)}
+                mode="outlined"
+                autoCapitalize="none"
+                contextMenuHidden
+                cursorColor={validatePasswordColor(localPassword)}
+                activeOutlineColor={validatePasswordColor(localPassword)}
+                contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                placeholderTextColor={Palette.SecDark}
+                outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+              />
+              {/* Re Password */}
+              <TextInput
+                textContentType="password"
+                placeholder="Re-type Password"
+                secureTextEntry={!showPassword}
+                value={conPassword}
+                onChangeText={(text) => setConPassword(text)}
+                mode="outlined"
+                autoCapitalize="none"
+                contextMenuHidden
+                cursorColor={validatePasswordColor(conPassword)}
+                activeOutlineColor={validatePasswordColor(conPassword)}
+                contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                placeholderTextColor={Palette.SecDark}
+                outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+              />
+              <Flex direction="row" justify="between" items="center" pv={5}>
+                {/* Show / Hide Pass */}
+                <Button
+                  icon={!showPassword ? 'eye' : 'eye-off'}
+                  mode="text"
+                  compact
+                  labelStyle={{
+                    fontFamily: KMFont.Regular,
+                    color: Palette.PrimLight,
+                  }}
+                  onPress={() => setShowPassword(!showPassword)}
+                >
+                  {!showPassword ? 'اظهار رمز المرور' : 'اخفاء رمز المرور'}
+                </Button>
+              </Flex>
+              {/* NEXT PASSWORD */}
+              <Button
+                mode="contained"
+                elevation={5}
+                buttonColor={Palette.Info}
+                textColor={Palette.PrimLight}
+                style={{ borderRadius: 1000, marginTop: 10 }}
+                labelStyle={{
+                  fontFamily: KMFont.Bold,
+                  fontSize: 17,
+                  lineHeight: 29,
+                }}
+                disabled={nextPassValid(conPassword, localPassword)}
+                onPress={() => {
+                  setpassStep(false);
+                  setTOUStep(true);
+                  setpassStepIcon('check-decagram');
+                }}
+              >
+                التالي
+              </Button>
+            </View>
+          )}
+        </Stack>
+        {/* TOUchecked */}
+        {TOUStep && (
+          <View>
+            <Flex direction="row" justify="between" items="center" pv={5}>
+              <Button
+                icon={!TOUchecked ? 'checkbox-blank-outline' : 'checkbox-marked-outline'}
+                mode="text"
+                compact
+                labelStyle={{
+                  fontFamily: KMFont.Regular,
+                  color: Palette.PrimLight,
+                }}
+                onPress={() => setTOUChecked(!TOUchecked)}
+              >
+                اوافق على سياسة الاستخدام والخصوصية
+              </Button>
+            </Flex>
+            {/* NEXT TOUchecked */}
             <Button
-              mode="elevated"
-              elevation={3}
-              buttonColor={Palette.PrimLight}
-              textColor={Palette.darkBg}
-              style={{ borderRadius: 2000 }}
+              mode="contained"
+              elevation={5}
+              buttonColor={Palette.Info}
+              textColor={Palette.PrimLight}
+              style={{ borderRadius: 1000, marginTop: 10 }}
               labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 20,
+                fontFamily: KMFont.Bold,
+                fontSize: 17,
                 lineHeight: 29,
               }}
+              disabled={!TOUchecked ? true : false}
               onPress={() => {
-                userCreactAccount();
+                setTOUStep(false);
+                setCarStep(true);
+                setTOUStepIcon('check-decagram');
               }}
             >
-              ابدأ
+              التالي
             </Button>
-            <Box pv={2} />
+          </View>
+        )}
+        {/* CAR DATA */}
+        {carStep && (
+          <Stack direction="column" justify="center" items="stretch" spacing={8} pb={5}>
+            <Box>
+              <SelectList
+                setSelected={setLocalMake}
+                data={carMake}
+                fontFamily={KMFont.Regular}
+                search={false}
+                dropdownStyles={[
+                  { backgroundColor: Palette.PrimLight, zIndex: 22 },
+                  Styles.dropdownStyles,
+                ]}
+                boxStyles={[{ backgroundColor: Palette.PrimLight }, Styles.boxStyles]}
+                inputStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                dropdownTextStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                placeholder="الشركة"
+                arrowicon={
+                  <MaterialCommunityIcons name="menu-down" color={Palette.Info} size={30} />
+                }
+              />
+            </Box>
+            {localMake && (
+              <Box>
+                <SelectList
+                  setSelected={setLocalModel}
+                  data={carModel[localMake]}
+                  fontFamily={KMFont.Regular}
+                  search={false}
+                  dropdownStyles={[
+                    { backgroundColor: Palette.PrimLight, zIndex: 22 },
+                    Styles.dropdownStyles,
+                  ]}
+                  boxStyles={[{ backgroundColor: Palette.PrimLight }, Styles.boxStyles]}
+                  inputStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  dropdownTextStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  placeholder="الموديل"
+                  arrowicon={
+                    <MaterialCommunityIcons name="menu-down" color={Palette.Info} size={30} />
+                  }
+                />
+              </Box>
+            )}
+            {loaclModel && (
+              <Box>
+                <SelectList
+                  setSelected={setLocalYear}
+                  data={carYear}
+                  fontFamily={KMFont.Regular}
+                  search={false}
+                  dropdownStyles={[
+                    { backgroundColor: Palette.PrimLight, zIndex: 22 },
+                    Styles.dropdownStyles,
+                  ]}
+                  boxStyles={[{ backgroundColor: Palette.PrimLight }, Styles.boxStyles]}
+                  inputStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  dropdownTextStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  placeholder="السنة"
+                  arrowicon={
+                    <MaterialCommunityIcons name="menu-down" color={Palette.Info} size={30} />
+                  }
+                />
+              </Box>
+            )}
+            {/* NEXT CAR DATA */}
             <Button
-              mode="text"
+              mode="contained"
+              elevation={5}
+              buttonColor={Palette.Info}
               textColor={Palette.PrimLight}
-              style={{ borderRadius: 2000 }}
+              style={{ borderRadius: 1000, marginTop: 10 }}
               labelStyle={{
-                fontFamily: KMFont.Medium,
-                fontSize: 18,
+                fontFamily: KMFont.Bold,
+                fontSize: 17,
                 lineHeight: 29,
               }}
-              onPress={() => go.to('signup')}
-            >
-              مستخدم جديد؟ انشئ حسابك
-            </Button>
-            <Button
-              mode="text"
-              labelStyle={{
-                fontFamily: KMFont.Medium,
+              disabled={nextCarValid(localMake, loaclModel, localYear)}
+              onPress={() => {
+                setCarStep(false);
+                setAddressStep(true);
+                setCarStepIcon('check-decagram');
               }}
-              textColor={Palette.PrimLight}
-              onPress={() =>
-                openLink('https://kareemabo3id.github.io/ourcar-TOU/')
-              }
             >
-              سياسة الاستخدام والخصوصية
+              التالي
             </Button>
-          </Flex>
-          {/* BUTTONS ========================== */}
-        </Flex>
+          </Stack>
+        )}
+        {/* Address Data */}
+        {addressStep && (
+          <Stack direction="column" justify="center" items="stretch" spacing={8} pb={5}>
+            <Box>
+              <SelectList
+                setSelected={setLocalReg}
+                data={reg}
+                fontFamily={KMFont.Regular}
+                search={false}
+                dropdownStyles={[
+                  { backgroundColor: Palette.PrimLight, zIndex: 22 },
+                  Styles.dropdownStyles,
+                ]}
+                boxStyles={[{ backgroundColor: Palette.PrimLight }, Styles.boxStyles]}
+                inputStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                dropdownTextStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                placeholder="المنطقة"
+                arrowicon={
+                  <MaterialCommunityIcons name="menu-down" color={Palette.Info} size={30} />
+                }
+              />
+            </Box>
+            {localReg && (
+              <Box>
+                <SelectList
+                  setSelected={setLocalCity}
+                  data={cit[localReg]}
+                  fontFamily={KMFont.Regular}
+                  search={false}
+                  dropdownStyles={[
+                    { backgroundColor: Palette.PrimLight, zIndex: 22 },
+                    Styles.dropdownStyles,
+                  ]}
+                  boxStyles={[{ backgroundColor: Palette.PrimLight }, Styles.boxStyles]}
+                  inputStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  dropdownTextStyles={{ color: Palette.PrimDark, fontSize: 17.5 }}
+                  placeholder="المدينة"
+                  arrowicon={
+                    <MaterialCommunityIcons name="menu-down" color={Palette.Info} size={30} />
+                  }
+                />
+              </Box>
+            )}
+            {loaclCity && (
+              <Box>
+                <TextInput
+                  keyboardType="default"
+                  textContentType="none"
+                  placeholder="الحي"
+                  value={localDis}
+                  onChangeText={(name) => setLocalDis(name)}
+                  mode="outlined"
+                  contextMenuHidden
+                  cursorColor={validateNameColor(localDis)}
+                  activeOutlineColor={validateNameColor(localDis)}
+                  contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17.5 }}
+                  style={{ backgroundColor: Palette.PrimLight, textAlign: 'auto' }}
+                  placeholderTextColor={Palette.SecDark}
+                  outlineStyle={{ borderRadius: 1000, borderWidth: 1 }}
+                />
+              </Box>
+            )}
+            {/* NEXT ADDRESS DATA */}
+            <Button
+              mode="contained"
+              elevation={5}
+              buttonColor={Palette.Info}
+              textColor={Palette.PrimLight}
+              style={{ borderRadius: 1000, marginTop: 10 }}
+              labelStyle={{
+                fontFamily: KMFont.Bold,
+                fontSize: 17,
+                lineHeight: 29,
+              }}
+              disabled={nextCarValid(localReg, loaclCity, localDis)}
+              onPress={() => {
+                setAddressStep(false);
+                setFinishAll(true);
+                setAddressStepIcon('check-decagram');
+              }}
+            >
+              التالي
+            </Button>
+          </Stack>
+        )}
+        {/* SIGN UP BUTTON */}
+        <Stack direction="column" justify="center" items="stretch" pt={10}>
+          {finishAll && (
+            <View>
+              <Card
+                style={{ borderRadius: 15, backgroundColor: Palette.Primary, marginBottom: 30 }}
+                elevation={5}
+              >
+                <Card.Content>
+                  <Text
+                    variant="headlineSmall"
+                    style={{ fontFamily: KMFont.Bold, color: Palette.PrimLight }}
+                  >
+                    {`👋 أهلاً، ${localFName} ${localLName}`}
+                  </Text>
+                  <Divider color={Palette.PrimLight} style={{ marginVertical: 8, opacity: 0.4 }} />
+                  <Text
+                    variant="bodyLarge"
+                    style={{ fontFamily: KMFont.Regular, color: Palette.PrimLight }}
+                  >
+                    {`📧 الايميل: ${localEmail}`}
+                  </Text>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ fontFamily: KMFont.Regular, color: Palette.PrimLight }}
+                  >
+                    {`🚗 السيارة: ${localMake} ${loaclModel} ${localYear}`}
+                  </Text>
+                  <Text
+                    variant="bodyLarge"
+                    style={{ fontFamily: KMFont.Regular, color: Palette.PrimLight }}
+                  >
+                    {`🗺️ العنوان: ${loaclCity} - ${localDis}`}
+                  </Text>
+                </Card.Content>
+                <Card.Actions>
+                  <IconButton
+                    mode="contained"
+                    containerColor={Palette.Red}
+                    icon="delete"
+                    iconColor={Palette.PrimLight}
+                    onPress={() => {
+                      resetSignUpForm();
+                    }}
+                  />
+                </Card.Actions>
+              </Card>
+              <Button
+                mode="contained"
+                elevation={5}
+                buttonColor={Palette.Info}
+                textColor={Palette.PrimLight}
+                style={{ borderRadius: 1000 }}
+                labelStyle={{
+                  fontFamily: KMFont.Bold,
+                  fontSize: 17,
+                  lineHeight: 29,
+                }}
+                onPress={() =>
+                  userCreactAccount(
+                    localFName,
+                    localLName,
+                    localEmail,
+                    localPassword,
+                    localMake,
+                    loaclModel,
+                    localYear,
+                    localReg,
+                    loaclCity,
+                    localDis
+                  )
+                }
+              >
+                إنشاء
+              </Button>
+            </View>
+          )}
+          <Button
+            mode="text"
+            textColor={Palette.Info}
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              fontSize: 15,
+              lineHeight: 29,
+            }}
+            onPress={() => go.to('login')}
+          >
+            لديك حساب مسجل؟ سجل دخولك
+          </Button>
+          <Button
+            mode="text"
+            labelStyle={{
+              fontFamily: KMFont.Regular,
+              color: Palette.SecDark,
+              fontSize: 12,
+            }}
+            onPress={() => openLink('https://kareemabo3id.github.io/ourcar-TOU/')}
+          >
+            سياسة الاستخدام والخصوصية
+          </Button>
+        </Stack>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -343,21 +759,21 @@ export default function Signup() {
 const Styles = StyleSheet.create({
   SAVStyleForAndroid: {
     flex: 1,
-
     justifyContent: 'center',
-    paddingHorizontal: 25,
+    paddingHorizontal: 22,
   },
-  image: {
-    resizeMode: 'contain',
-    width: width / 1.8,
-    height: height * 0.21,
-  },
-  TextInputStyle: {
-    paddingLeft: 10,
+  dropdownStyles: {
     borderWidth: 0,
-    borderColor: 'transparent',
+    position: 'absolute',
+    marginTop: 55,
+    width: '100%',
+    elevation: 10,
+    borderRadius: 15,
   },
-  TextInputContentStyle: {
-    fontSize: 17.5,
+  boxStyles: {
+    borderWidth: 0,
+    borderRadius: 1000,
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
 });
