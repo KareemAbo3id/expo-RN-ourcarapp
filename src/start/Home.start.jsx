@@ -47,7 +47,7 @@ export default function Home() {
     firebase
       .firestore()
       .collection('users')
-      .doc(currentUser.uid)
+      .doc(currentUser?.uid)
       .get()
       .then((snapshot) => {
         if (snapshot.exists) {
@@ -164,8 +164,8 @@ export default function Home() {
               return (
                 <MaterialCommunityIcons
                   name={iconName}
-                  size={focused ? 30 : 24}
-                  color={focused ? Palette.Primary : Palette.SecDark}
+                  size={35}
+                  color={focused ? Palette.Primary2 : Palette.SecDark}
                 />
               );
             },
@@ -185,7 +185,7 @@ export default function Home() {
                   variant="labelMedium"
                   style={{
                     fontFamily: KMFont.Regular,
-                    color: focused ? Palette.Primary : Palette.SecDark,
+                    color: focused ? Palette.Primary2 : Palette.SecDark,
                   }}
                 >
                   {tabLabel}
@@ -194,8 +194,12 @@ export default function Home() {
             },
             lazy: true,
             tabBarShowLabel: true,
-            tabBarItemStyle: { paddingVertical: 5 },
-            tabBarStyle: { height: 60, margin: 10, elevation: 30, borderRadius: 1000 },
+            tabBarItemStyle: { paddingVertical: 8 },
+            tabBarStyle: {
+              height: 75,
+              borderTopLeftRadius: 20,
+              borderTopRightRadius: 20,
+            },
             tabBarHideOnKeyboard: true,
           })}
         >
