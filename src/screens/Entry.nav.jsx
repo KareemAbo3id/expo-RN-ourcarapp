@@ -7,8 +7,8 @@
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Stack } from '@react-native-material/core';
 import React, { useState } from 'react';
-import { FlatList, RefreshControl } from 'react-native';
-import { Text } from 'react-native-paper';
+import { FlatList } from 'react-native';
+import { Text, TextInput } from 'react-native-paper';
 import centersList from '../../data/centersList';
 import CenterItem from '../components/CenterItem.component';
 import KMFont from '../hooks/useFont.hook';
@@ -20,6 +20,7 @@ export default function EntryNav() {
   // local hooks:
   const Palette = usePalette();
   const [refreshing, setRefreshing] = useState(false);
+  const [centerSearch, setCenterSearch] = useState('');
 
   // local handlers:
 
@@ -34,8 +35,25 @@ export default function EntryNav() {
   // local ui:
   return (
     <Stack ph={10}>
-      <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+      <Stack w="100%" ph={10} pb={10}>
+        <TextInput
+          placeholder="ابحث عن شركة / مركز صيانة / خدمة"
+          value={centerSearch}
+          onChangeText={(text) => setCenterSearch(text)}
+          mode="outlined"
+          autoCapitalize="none"
+          cursorColor={Palette.Primary2}
+          activeOutlineColor={Palette.SecDark2}
+          outlineColor="transparent"
+          contentStyle={{ fontFamily: KMFont.Regular, fontSize: 17 }}
+          style={{ backgroundColor: Palette.White, textAlign: 'auto' }}
+          placeholderTextColor={Palette.SecDark}
+          outlineStyle={{ borderRadius: 12, borderWidth: 1 }}
+        />
+      </Stack>
       <FlatList
+        refreshing={refreshing}
+        onRefresh={onRefresh}
         data={centersList}
         renderItem={({ item }) => (
           <CenterItem
