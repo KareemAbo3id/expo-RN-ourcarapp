@@ -114,10 +114,10 @@ export default function Signup() {
 
   // Creact Account handler =============:
   const userCreactAccount = async (
-    fname,
-    lname,
-    email,
-    password,
+    userFname,
+    userLname,
+    userEmail,
+    userPassword,
     userMake,
     userModel,
     userYear,
@@ -127,7 +127,7 @@ export default function Signup() {
   ) => {
     await firebase
       .auth()
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(userEmail, userPassword)
       .then(() => {
         firebase
           .auth()
@@ -135,31 +135,30 @@ export default function Signup() {
             handleCodeInApp: true,
             url: 'https://ourcarapp-4330e.firebaseapp.com/',
           })
+          .then(() => {
+            alert('تم ارسال رابط تفعيل الحساب الى بريدك الالكتروني');
+          })
           .catch(() => {
             alert('خطأ غير معروف، حاول مرة اخرى');
           })
           .then(() => {
-            firebase
-              .firestore()
-              .collection('users')
-              .doc(firebase.auth().currentUser.uid)
-              .set({
-                email,
-                fullName: {
-                  fname,
-                  lname,
-                },
-                userCar: {
-                  make: userMake,
-                  model: userModel,
-                  year: userYear,
-                },
-                userAddress: {
-                  reg: userReg,
-                  city: userCity,
-                  dis: userDis,
-                },
-              });
+            firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set({
+              userContact: {
+                userFname,
+                userLname,
+                userEmail,
+              },
+              userCar: {
+                userMake,
+                userModel,
+                userYear,
+              },
+              userAddress: {
+                userReg,
+                userCity,
+                userDis,
+              },
+            });
           })
           .catch(() => {
             alert('خطأ غير معروف، حاول مرة اخرى');

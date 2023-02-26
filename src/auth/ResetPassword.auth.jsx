@@ -98,6 +98,18 @@ export default function ResetPassword() {
             </Button>
             <Button
               mode="text"
+              textColor={Palette.Info}
+              labelStyle={{
+                fontFamily: KMFont.Regular,
+                fontSize: 17,
+                lineHeight: 29,
+              }}
+              onPress={() => go.to('login')}
+            >
+              رجوع
+            </Button>
+            <Button
+              mode="text"
               labelStyle={{
                 fontFamily: KMFont.Regular,
                 color: Palette.SecDark,
@@ -120,7 +132,7 @@ export default function ResetPassword() {
             textColor={Palette.Info}
             labelStyle={{
               fontFamily: KMFont.Regular,
-              fontSize: 15,
+              fontSize: 17,
               lineHeight: 29,
             }}
             onPress={() => go.to('login')}

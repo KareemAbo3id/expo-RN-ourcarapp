@@ -40,7 +40,12 @@ export default function Login() {
   // login handler =============:
   const userLogin = async (email, password) => {
     try {
-      await firebase.auth().signInWithEmailAndPassword(email, password);
+      await firebase
+        .auth()
+        .signInWithEmailAndPassword(email, password)
+        .catch((e) => {
+          alert('البريد الالكتورني الذي ادخلته غير مسجل لدينا، انشئ احسابك اولاً.');
+        });
     } catch (error) {
       console.log(error);
     }

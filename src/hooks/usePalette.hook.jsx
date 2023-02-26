@@ -3,6 +3,7 @@ export default function usePalette() {
   // Primary colors:
   const Primary = '#526ff1';
   const SecPrimary = '#BAD7E9';
+  const Primary2 = '#4764e1';
 
   // bg
   const darkBg = '#263578';
@@ -28,6 +29,7 @@ export default function usePalette() {
   return {
     Primary,
     SecPrimary,
+    Primary2,
     darkBg,
     darkerBg,
     PrimDark,
